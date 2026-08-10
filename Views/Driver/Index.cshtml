@@ -1,19 +1,125 @@
+@model OrionMVP.Models.Route
 @{
-    ViewData["Title"] = "App Conductor";
+    ViewData["Title"] = "App Móvil Conductor - Lista 1..N (HU04)";
+    var drivers = ViewBag.Drivers as List<OrionMVP.Models.Driver> ?? new List<OrionMVP.Models.Driver>();
+    int selectedDriverId = ViewBag.SelectedDriverId ?? 1;
 }
 
-<div style="margin-bottom: 2rem;">
-    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">App Móvil Conductor</h1>
-    <p style="color: var(--text-muted);">Módulo móvil para navegación, secuencia 1..N, odómetro y cancelación (HU04 - HU06, HU10).</p>
-</div>
+<div style="max-width: 540px; margin: 0 auto;">
+    
+    <!-- Mobile Header Container -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+            <span class="brand-badge"><i class="fa-solid fa-mobile-screen-button"></i> VISTA CONDUCTOR</span>
+            <h1 style="font-size: 1.6rem; font-weight: 800; margin-top: 4px;">Ruta Diaria de Entregas</h1>
+        </div>
 
-<div class="glass-card">
-    <div style="text-align: center; padding: 3rem 1rem;">
-        <i class="fa-solid fa-mobile-screen-button" style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 1rem;"></i>
-        <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Estructura Base del Módulo Conductor</h3>
-        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 1.5rem auto;">
-            Listo para recibir la secuencia de entregas y control de odómetro.
-        </p>
-        <span class="status-badge status-pending">Esperando HU04</span>
+        <!-- Driver Switcher -->
+        <div>
+            <form method="get" asp-action="Index">
+                <select name="driverId" onchange="this.form.submit()" style="padding: 6px 10px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 0.85rem;">
+                    @foreach (var d in drivers)
+                    {
+                        if (d.Id == selectedDriverId)
+                        {
+                            <option value="@d.Id" selected>@d.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@d.Id">@d.Name</option>
+                        }
+                    }
+                </select>
+            </form>
+        </div>
     </div>
+
+    @if (Model == null || !Model.Stops.Any())
+    {
+        <div class="glass-card" style="text-align: center; padding: 3rem 1.5rem;">
+            <i class="fa-solid fa-truck-dash" style="font-size: 3rem; color: var(--ups-gold); margin-bottom: 1rem;"></i>
+            <h3 style="font-weight: 700; margin-bottom: 0.5rem;">No tienes rutas asignadas para hoy</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Solicita al despachador que cargue la planilla de entregas en el panel principal.
+            </p>
+        </div>
+    }
+    else
+    {
+        <!-- Active Route Progress Banner -->
+        <div class="glass-card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95)); border: 1px solid rgba(255,181,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div style="font-weight: 800; font-size: 1.1rem; color: var(--ups-gold);">
+                    <i class="fa-solid fa-route"></i> @Model.Name
+                </div>
+                <span class="status-badge status-active">@Model.Status</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                <span>Total Paradas: <strong style="color: #fff;">@Model.Stops.Count</strong></span>
+                <span>Distancia Total: <strong style="color: var(--accent-blue);">@Model.TotalDistanceKm km</strong></span>
+            </div>
+        </div>
+
+        <!-- Vertical Stops List (1 to N) -->
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+            @foreach (var stop in Model.Stops)
+            {
+                var isCancelled = stop.Status == "No entregado";
+                var isDelivered = stop.Status == "Entregado";
+                
+                var cardBg = isCancelled 
+                    ? "background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);" 
+                    : (isDelivered 
+                        ? "background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);" 
+                        : "background: var(--bg-card); border: 1px solid var(--border-color);");
+
+                <div style="@cardBg border-radius: 14px; padding: 1.1rem; backdrop-filter: blur(12px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        
+                        <!-- Sequential Number Badge (1..N) -->
+                        <div style="background: linear-gradient(135deg, var(--ups-gold), #f59e0b); color: #111; font-weight: 800; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(255, 181, 0, 0.3);">
+                            #@stop.SequenceOrder
+                        </div>
+
+                        <!-- Stop Information -->
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                                <h4 style="font-weight: 800; font-size: 1.05rem; color: #fff;">
+                                    @stop.CustomerName
+                                </h4>
+                                @if (isCancelled)
+                                {
+                                    <span class="status-badge status-cancelled">No entregado</span>
+                                }
+                                else if (isDelivered)
+                                {
+                                    <span class="status-badge status-delivered">Entregado</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-pending">Pendiente</span>
+                                }
+                            </div>
+
+                            <!-- Full Address -->
+                            <div style="color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-location-dot" style="color: var(--ups-gold);"></i>
+                                <span>@stop.FullAddress</span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(stop.CancellationReason))
+                            {
+                                <div style="margin-top: 6px; font-size: 0.8rem; color: #fca5a5; background: rgba(239, 68, 68, 0.15); padding: 4px 8px; border-radius: 6px;">
+                                    <strong>Motivo:</strong> @stop.CancellationReason
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
 </div>
