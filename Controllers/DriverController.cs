@@ -93,7 +93,6 @@ namespace OrionMVP.Controllers
 
             _db.OdometerLogs.Add(log);
 
-            // Update driver status
             var driver = await _db.Drivers.FindAsync(route.DriverId);
             if (driver != null)
             {
@@ -105,6 +104,59 @@ namespace OrionMVP.Controllers
             int realKm = finalKm - initialKm;
             TempData["SuccessMessage"] = $"Odómetro registrado con éxito. Distancia real recorrida: {realKm} KM.";
             return RedirectToAction("Index", new { routeId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelStop(int stopId, string reason)
+        {
+            var stop = await _db.RouteStops.FindAsync(stopId);
+            if (stop == null)
+            {
+                return NotFound();
+            }
+
+            stop.Status = "No entregado";
+            stop.CancellationReason = string.IsNullOrWhiteSpace(reason) ? "Cliente ausente" : reason;
+
+            // Ensure route status is set to En Ruta
+            var route = await _db.Routes.FindAsync(stop.RouteId);
+            if (route != null && route.Status == "No iniciado")
+            {
+                route.Status = "En Ruta";
+                var driver = await _db.Drivers.FindAsync(route.DriverId);
+                if (driver != null) driver.Status = "En Ruta";
+            }
+
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Parada #{stop.SequenceOrder} marcada como 'No entregada' (Motivo: {stop.CancellationReason}). Se ha desbloqueado la siguiente entrega.";
+            return RedirectToAction("Index", new { routeId = stop.RouteId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkDelivered(int stopId)
+        {
+            var stop = await _db.RouteStops.FindAsync(stopId);
+            if (stop == null)
+            {
+                return NotFound();
+            }
+
+            stop.Status = "Entregado";
+            stop.CancellationReason = null;
+
+            var route = await _db.Routes.FindAsync(stop.RouteId);
+            if (route != null && route.Status == "No iniciado")
+            {
+                route.Status = "En Ruta";
+                var driver = await _db.Drivers.FindAsync(route.DriverId);
+                if (driver != null) driver.Status = "En Ruta";
+            }
+
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"¡Excelente! Parada #{stop.SequenceOrder} marcada como Entregada.";
+            return RedirectToAction("Index", new { routeId = stop.RouteId });
         }
     }
 }

@@ -1,6 +1,6 @@
 @model OrionMVP.Models.Route
 @{
-    ViewData["Title"] = "App Móvil Conductor - Odómetro (HU06)";
+    ViewData["Title"] = "App Móvil Conductor - Cancelación de Parada (HU10)";
     var drivers = ViewBag.Drivers as List<OrionMVP.Models.Driver> ?? new List<OrionMVP.Models.Driver>();
     int selectedDriverId = ViewBag.SelectedDriverId ?? 1;
 }
@@ -10,7 +10,7 @@
     <!-- Mobile Header -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
         <div>
-            <span class="brand-badge"><i class="fa-solid fa-gauge-high"></i> CONTROL DE ODÓMETRO</span>
+            <span class="brand-badge"><i class="fa-solid fa-truck-ramp-box"></i> APP CONDUCTOR</span>
             <h1 style="font-size: 1.6rem; font-weight: 800; margin-top: 4px;">Ruta Diaria de Entregas</h1>
         </div>
 
@@ -72,6 +72,7 @@
 
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
                 <span>Total Paradas: <strong style="color: #fff;">@Model.Stops.Count</strong></span>
+                <span>Completadas: <strong style="color: var(--accent-green);">@Model.Stops.Count(s => s.Status != "Pendiente")</strong></span>
                 <span>Distancia Est.: <strong style="color: var(--accent-blue);">@Model.TotalDistanceKm km</strong></span>
             </div>
         </div>
@@ -122,7 +123,7 @@
             </form>
         </div>
 
-        <!-- Vertical Stops List (1 to N) -->
+        <!-- Vertical Stops List (1 to N) with Cancellation Modal (HU10) -->
         <div style="display: flex; flex-direction: column; gap: 0.85rem;">
             @foreach (var stop in Model.Stops)
             {
@@ -130,14 +131,14 @@
                 var isDelivered = stop.Status == "Entregado";
                 
                 var cardBg = isCancelled 
-                    ? "background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);" 
+                    ? "background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4);" 
                     : (isDelivered 
-                        ? "background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);" 
+                        ? "background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4);" 
                         : "background: var(--bg-card); border: 1px solid var(--border-color);");
 
                 <div style="@cardBg border-radius: 14px; padding: 1.1rem; backdrop-filter: blur(12px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                    <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
-                        
+                    
+                    <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.85rem;">
                         <div style="background: linear-gradient(135deg, var(--ups-gold), #f59e0b); color: #111; font-weight: 800; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(255, 181, 0, 0.3);">
                             #@stop.SequenceOrder
                         </div>
@@ -168,26 +169,84 @@
 
                             @if (!string.IsNullOrEmpty(stop.CancellationReason))
                             {
-                                <div style="margin-top: 6px; font-size: 0.8rem; color: #fca5a5; background: rgba(239, 68, 68, 0.15); padding: 4px 8px; border-radius: 6px;">
-                                    <strong>Motivo:</strong> @stop.CancellationReason
+                                <div style="margin-top: 6px; font-size: 0.85rem; color: #fca5a5; background: rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>Motivo de Cancelación:</strong> @stop.CancellationReason
                                 </div>
                             }
                         </div>
-
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem;">
-                        <a href="@stop.GetGoogleMapsUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-primary" style="padding: 8px; font-size: 0.85rem; background: linear-gradient(135deg, #4285F4, #34A853); color: #fff;">
+                    <!-- Navigation Action Buttons (HU05) -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0.85rem;">
+                        <a href="@stop.GetGoogleMapsUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-primary" style="padding: 7px; font-size: 0.8rem; background: linear-gradient(135deg, #4285F4, #34A853); color: #fff;">
                             <i class="fa-solid fa-map-location-dot"></i> Google Maps
                         </a>
                         
-                        <a href="@stop.GetWazeUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-secondary" style="padding: 8px; font-size: 0.85rem; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
+                        <a href="@stop.GetWazeUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-secondary" style="padding: 7px; font-size: 0.8rem; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
                             <i class="fa-solid fa-diamond-turn-right"></i> Waze
                         </a>
                     </div>
+
+                    <!-- Delivery & Cancellation Actions (HU10) -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem;">
+                        
+                        <form asp-action="MarkDelivered" method="post" style="margin: 0;">
+                            <input type="hidden" name="stopId" value="@stop.Id" />
+                            <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 8px; font-size: 0.85rem; background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff;">
+                                <i class="fa-solid fa-circle-check"></i> Entregado
+                            </button>
+                        </form>
+
+                        <button type="button" onclick="toggleCancelModal(@stop.Id)" class="btn-orion-danger" style="width: 100%; padding: 8px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-ban"></i> Cancelar Parada
+                        </button>
+
+                    </div>
+
+                    <!-- Dropdown cancellation modal (HU10) -->
+                    <div id="cancelModal_@stop.Id" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 10px;">
+                        <form asp-action="CancelStop" method="post">
+                            <input type="hidden" name="stopId" value="@stop.Id" />
+                            
+                            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #fca5a5; margin-bottom: 6px;">
+                                Seleccione el Motivo de No Entrega (HU10):
+                            </label>
+
+                            <select name="reason" required style="width: 100%; padding: 8px; border-radius: 6px; background: #1e293b; color: #fff; border: 1px solid var(--border-color); font-size: 0.9rem; margin-bottom: 10px;">
+                                <option value="Cliente ausente">Cliente ausente</option>
+                                <option value="Dirección incorrecta">Dirección incorrecta</option>
+                                <option value="Zona inaccesible">Zona inaccesible</option>
+                                <option value="Rechazado por el cliente">Rechazado por el cliente</option>
+                                <option value="Vehículo averiado">Vehículo averiado</option>
+                            </select>
+
+                            <div style="display: flex; gap: 8px;">
+                                <button type="submit" class="btn-orion-danger" style="flex: 1; padding: 8px; font-size: 0.85rem;">
+                                    Confirmar Cancelación
+                                </button>
+                                <button type="button" onclick="toggleCancelModal(@stop.Id)" class="btn-orion-secondary" style="padding: 8px 12px; font-size: 0.85rem;">
+                                    Cerrar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             }
         </div>
     }
 
 </div>
+
+@section Scripts {
+    <script>
+        function toggleCancelModal(stopId) {
+            const modal = document.getElementById('cancelModal_' + stopId);
+            if (modal.style.display === 'none' || modal.style.display === '') {
+                modal.style.display = 'block';
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+}
