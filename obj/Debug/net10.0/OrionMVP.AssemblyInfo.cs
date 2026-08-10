@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OrionMVP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9179038e43ea057cf4c73e32df1e60b24a514cb8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8c4939d67b9cdcd9b0ce9b414c1c407ddf3adc5")]
 [assembly: System.Reflection.AssemblyProductAttribute("OrionMVP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OrionMVP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

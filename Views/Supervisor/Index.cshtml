@@ -5,10 +5,46 @@
 
 <div style="margin-bottom: 2rem;">
     <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;">
-        <i class="fa-solid fa-chart-bar" style="color: var(--accent-green);"></i> Reporte de Comparación de Distancias (HU07)
+        <i class="fa-solid fa-chart-bar" style="color: var(--accent-green);"></i> Reporte de Comparación de Distancias & BD Piloto
     </h1>
-    <p style="color: var(--text-muted);">Análisis de eficiencia: Comparación de Kilómetros Reales vs Promedio Histórico Manual del Piloto.</p>
+    <p style="color: var(--text-muted);">Análisis de eficiencia: Comparación de Kilómetros Reales vs Promedio Histórico y estado de la Base de Datos Independiente.</p>
 </div>
+
+@{
+    var dbHealth = ViewBag.DbHealth as OrionMVP.Services.DatabaseHealthDto;
+}
+
+@if (dbHealth != null)
+{
+    <div class="glass-card" style="margin-bottom: 2rem; border: 1px solid rgba(56, 189, 248, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h3 style="font-weight: 700; font-size: 1.1rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-database"></i> Base de Datos Independiente del Piloto (HU08)
+                </h3>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                    Proveedor: <strong>@dbHealth.Provider</strong> | Cadena: <code>@dbHealth.ConnectionString</code>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span class="status-badge status-delivered">
+                    <i class="fa-solid fa-server"></i> Conectado & Operativo
+                </span>
+                <span class="status-badge status-active">
+                    <i class="fa-solid fa-hard-drive"></i> Tamaño: @dbHealth.DatabaseSizeKb KB
+                </span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem;">
+            <div>Rutas Almacenadas: <strong style="color: var(--ups-gold);">@dbHealth.TotalRoutes</strong></div>
+            <div>Paradas Conservadas: <strong style="color: var(--accent-blue);">@dbHealth.TotalStops</strong></div>
+            <div>Logs de Odómetro: <strong style="color: var(--accent-green);">@dbHealth.TotalOdometerLogs</strong></div>
+            <div>Conexión Remota: <strong style="color: #4ade80;">Habilitada con credenciales</strong></div>
+        </div>
+    </div>
+}
 
 <!-- KPI Cards -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">

@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAddressImportService, AddressImportService>();
 builder.Services.AddHttpClient<IGeocodingService, NominatimGeocodingService>();
 builder.Services.AddScoped<IRouteOptimizerService, NearestNeighborOptimizerService>();
+builder.Services.AddScoped<IDatabaseHealthService, DatabaseHealthService>();
 
 // Register DbContext with SQLite
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=orion.db";

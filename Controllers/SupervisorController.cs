@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrionMVP.Data;
 using OrionMVP.Models;
+using OrionMVP.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,14 +24,17 @@ namespace OrionMVP.Controllers
     public class SupervisorController : Controller
     {
         private readonly OrionDbContext _db;
+        private readonly IDatabaseHealthService _dbHealthService;
 
-        public SupervisorController(OrionDbContext db)
+        public SupervisorController(OrionDbContext db, IDatabaseHealthService dbHealthService)
         {
             _db = db;
+            _dbHealthService = dbHealthService;
         }
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.DbHealth = await _dbHealthService.GetHealthStatusAsync();
             var routes = await _db.Routes
                 .Include(r => r.Driver)
                 .Include(r => r.Stops)
