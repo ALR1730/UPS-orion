@@ -11,9 +11,22 @@ using Route = OrionMVP.Models.Route;
 
 namespace OrionMVP.Controllers
 {
+    public class DriverProgressDto
+    {
+        public int DriverId { get; set; }
+        public string DriverName { get; set; } = string.Empty;
+        public string VehicleId { get; set; } = string.Empty;
+        public string DriverStatus { get; set; } = "No iniciado";
+        public string RouteName { get; set; } = string.Empty;
+        public int TotalStops { get; set; }
+        public int CompletedStops { get; set; }
+        public int ProgressPercentage => TotalStops > 0 ? (int)Math.Round((double)CompletedStops * 100 / TotalStops) : 0;
+    }
+
     public class SupervisorReportViewModel
     {
         public List<Route> Routes { get; set; } = new();
+        public List<DriverProgressDto> DriverMonitoring { get; set; } = new();
         public double TotalHistoricalKm { get; set; }
         public double TotalRealKm { get; set; }
         public double TotalSavedKm { get; set; }
@@ -35,13 +48,37 @@ namespace OrionMVP.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.DbHealth = await _dbHealthService.GetHealthStatusAsync();
+
+            var drivers = await _db.Drivers
+                .Include(d => d.Routes)
+                .ThenInclude(r => r.Stops)
+                .ToListAsync();
+
+            var monitoring = new List<DriverProgressDto>();
+            foreach (var d in drivers)
+            {
+                var activeRoute = d.Routes.OrderByDescending(r => r.CreatedAt).FirstOrDefault();
+                int total = activeRoute?.Stops.Count ?? 0;
+                int completed = activeRoute?.Stops.Count(s => s.Status == "Entregado" || s.Status == "No entregado") ?? 0;
+
+                monitoring.Add(new DriverProgressDto
+                {
+                    DriverId = d.Id,
+                    DriverName = d.Name,
+                    VehicleId = d.VehicleId,
+                    DriverStatus = d.Status,
+                    RouteName = activeRoute?.Name ?? "Sin Ruta Asignada",
+                    TotalStops = total,
+                    CompletedStops = completed
+                });
+            }
+
             var routes = await _db.Routes
                 .Include(r => r.Driver)
                 .Include(r => r.Stops)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 
-            // Ensure baseline distance is populated for demo if 0
             foreach (var r in routes)
             {
                 if (r.BaselineDistanceKm <= 0 && r.Stops.Count > 0)
@@ -52,7 +89,8 @@ namespace OrionMVP.Controllers
 
             var vm = new SupervisorReportViewModel
             {
-                Routes = routes
+                Routes = routes,
+                DriverMonitoring = monitoring
             };
 
             foreach (var r in routes)
@@ -69,7 +107,7 @@ namespace OrionMVP.Controllers
             vm.TotalFuelSavingsPercentage = vm.TotalHistoricalKm > 0 
                 ? Math.Round((vm.TotalSavedKm / vm.TotalHistoricalKm) * 100.0, 1) 
                 : 0.0;
-            vm.EstimatedFuelSavedLiters = Math.Round(vm.TotalSavedKm * 0.12, 1); // 12 liters / 100km
+            vm.EstimatedFuelSavedLiters = Math.Round(vm.TotalSavedKm * 0.12, 1);
 
             return View(vm);
         }

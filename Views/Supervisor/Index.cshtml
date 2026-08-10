@@ -1,13 +1,13 @@
 @model OrionMVP.Controllers.SupervisorReportViewModel
 @{
-    ViewData["Title"] = "Reporte de Comparación de Distancias (HU07)";
+    ViewData["Title"] = "Panel Supervisor & Monitoreo de Despacho (HU09)";
 }
 
 <div style="margin-bottom: 2rem;">
     <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;">
-        <i class="fa-solid fa-chart-bar" style="color: var(--accent-green);"></i> Reporte de Comparación de Distancias & BD Piloto
+        <i class="fa-solid fa-user-shield" style="color: var(--ups-gold);"></i> Panel de Control de Despacho (HU09)
     </h1>
-    <p style="color: var(--text-muted);">Análisis de eficiencia: Comparación de Kilómetros Reales vs Promedio Histórico y estado de la Base de Datos Independiente.</p>
+    <p style="color: var(--text-muted);">Supervisión en tiempo real del estado de jornada de conductores y progreso de paradas completadas.</p>
 </div>
 
 @{
@@ -45,6 +45,69 @@
         </div>
     </div>
 }
+
+<!-- Fleet Monitoring Dashboard (HU09) -->
+<div class="glass-card" style="margin-bottom: 2.5rem; border: 1px solid rgba(255, 181, 0, 0.4);">
+    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px; color: var(--ups-gold);">
+        <i class="fa-solid fa-truck-fast"></i> Monitoreo en Vivo de Conductores en Ruta (HU09)
+    </h3>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
+                    <th style="padding: 12px;">Conductor</th>
+                    <th style="padding: 12px;">Vehículo ID</th>
+                    <th style="padding: 12px;">Estado Jornada</th>
+                    <th style="padding: 12px;">Ruta Asignada</th>
+                    <th style="padding: 12px;">Progreso de Paradas</th>
+                    <th style="padding: 12px;">Avance %</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var driver in Model.DriverMonitoring)
+                {
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <td style="padding: 14px; font-weight: 700;">
+                            <i class="fa-solid fa-user-circle" style="color: var(--ups-gold);"></i> @driver.DriverName
+                        </td>
+                        <td style="padding: 14px; color: var(--text-muted); font-family: monospace;">
+                            @driver.VehicleId
+                        </td>
+                        <td style="padding: 14px;">
+                            @if (driver.DriverStatus == "No iniciado")
+                            {
+                                <span class="status-badge status-pending">No iniciado</span>
+                            }
+                            else if (driver.DriverStatus == "En Ruta")
+                            {
+                                <span class="status-badge status-active">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> En Ruta
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-delivered">Finalizado</span>
+                            }
+                        </td>
+                        <td style="padding: 14px; font-weight: 600;">@driver.RouteName</td>
+                        <td style="padding: 14px;">
+                            <strong style="color: #fff;">@driver.CompletedStops</strong> / @driver.TotalStops paradas
+                        </td>
+                        <td style="padding: 14px; width: 200px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
+                                    <div style="width: @driver.ProgressPercentage%; height: 100%; background: linear-gradient(90deg, var(--ups-gold), var(--accent-green)); border-radius: 10px; transition: width 0.4s ease;"></div>
+                                </div>
+                                <span style="font-weight: 700; font-size: 0.85rem; color: var(--ups-gold);">@driver.ProgressPercentage%</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <!-- KPI Cards -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
@@ -99,54 +162,6 @@
 
     <div style="position: relative; height: 320px; width: 100%;">
         <canvas id="savingsChart"></canvas>
-    </div>
-</div>
-
-<!-- Detailed Routes Comparison Table -->
-<div class="glass-card">
-    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px;">
-        <i class="fa-solid fa-table-list" style="color: var(--accent-blue);"></i> Detalle Comparativo por Ruta
-    </h3>
-
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
-            <thead>
-                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                    <th style="padding: 12px;">ID Ruta</th>
-                    <th style="padding: 12px;">Conductor</th>
-                    <th style="padding: 12px;">Histórico Manual</th>
-                    <th style="padding: 12px;">KM Real / Algoritmo</th>
-                    <th style="padding: 12px;">KM Ahorrados</th>
-                    <th style="padding: 12px;">% Ahorro Combustible</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var route in Model.Routes)
-                {
-                    double realKm = route.InitialKm.HasValue && route.FinalKm.HasValue 
-                        ? (route.FinalKm.Value - route.InitialKm.Value) 
-                        : (route.TotalDistanceKm > 0 ? route.TotalDistanceKm : route.Stops.Count * 3.2);
-
-                    double savedKm = Math.Max(0, route.BaselineDistanceKm - realKm);
-                    double pct = route.BaselineDistanceKm > 0 
-                        ? Math.Round((savedKm / route.BaselineDistanceKm) * 100.0, 1) 
-                        : 0.0;
-
-                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                        <td style="padding: 14px; font-weight: 700;">#@route.Id</td>
-                        <td style="padding: 14px; font-weight: 600;">@(route.Driver?.Name ?? "Sin Asignar")</td>
-                        <td style="padding: 14px; color: var(--text-muted);">@route.BaselineDistanceKm.ToString("N1") KM</td>
-                        <td style="padding: 14px; font-weight: 700; color: var(--accent-blue);">@realKm.ToString("N1") KM</td>
-                        <td style="padding: 14px; font-weight: 700; color: var(--accent-green);">+@savedKm.ToString("N1") KM</td>
-                        <td style="padding: 14px;">
-                            <span class="status-badge status-delivered">
-                                <i class="fa-solid fa-arrow-trend-down"></i> -@pct% Combustible
-                            </span>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
     </div>
 </div>
 
