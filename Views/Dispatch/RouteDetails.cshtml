@@ -1,0 +1,164 @@
+@model OrionMVP.Models.Route
+@{
+    ViewData["Title"] = $"Detalle de Ruta #{Model.Id}";
+}
+
+<div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <a asp-action="Index" class="btn-orion-secondary" style="padding: 6px 12px; margin-bottom: 0.5rem;">
+                <i class="fa-solid fa-arrow-left"></i> Volver a Lista de Rutas
+            </a>
+            <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;">
+                @Model.Name
+            </h1>
+            <p style="color: var(--text-muted);">
+                Conductor: <strong>@(Model.Driver?.Name ?? "Sin Asignar")</strong> | Paradas: <strong>@Model.Stops.Count</strong> | Estado: <strong>@Model.Status</strong>
+            </p>
+        </div>
+        
+        <form asp-action="GeocodeRoute" method="post">
+            <input type="hidden" name="routeId" value="@Model.Id" />
+            <button type="submit" class="btn-orion-primary">
+                <i class="fa-solid fa-earth-americas"></i> Re-Geocodificar con API Externa
+            </button>
+        </form>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;">
+        <i class="fa-solid fa-circle-check" style="font-size: 1.5rem;"></i>
+        <div>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    </div>
+}
+
+<!-- Summary Stats -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Total Paradas</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: var(--ups-gold);">@Model.Stops.Count</div>
+    </div>
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Geocodificadas Éxito</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-green);">
+            @Model.Stops.Count(s => s.IsGeocoded && !s.HasGeocodingError)
+        </div>
+    </div>
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Con Error (Resaltadas)</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-red);">
+            @Model.Stops.Count(s => s.HasGeocodingError)
+        </div>
+    </div>
+</div>
+
+<!-- Route Stops Table / Cards -->
+<div class="glass-card">
+    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-location-crosshairs" style="color: var(--ups-gold);"></i> Lista de Paradas y Coordenadas (HU02)
+    </h3>
+
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        @foreach (var stop in Model.Stops)
+        {
+            var isError = stop.HasGeocodingError;
+            var cardStyle = isError 
+                ? "border: 2px solid var(--accent-red); background: rgba(239, 68, 68, 0.12);" 
+                : "border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.03);";
+
+            <div style="@cardStyle border-radius: 12px; padding: 1.25rem; transition: all 0.2s ease;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: @(isError ? "var(--accent-red)" : "var(--ups-gold)"); color: #111; font-weight: 800; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                            #@stop.SequenceOrder
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 1.1rem;">
+                                @stop.CustomerName
+                                @if (isError)
+                                {
+                                    <span class="status-badge status-cancelled" style="margin-left: 8px;">
+                                        <i class="fa-solid fa-circle-exclamation"></i> Dirección Errónea / No Encontrada
+                                    </span>
+                                }
+                                else if (stop.IsGeocoded)
+                                {
+                                    <span class="status-badge status-delivered" style="margin-left: 8px;">
+                                        <i class="fa-solid fa-check"></i> Geocodificado
+                                    </span>
+                                }
+                            </div>
+                            <div style="color: var(--text-main); font-size: 1rem; margin-top: 2px;">
+                                <i class="fa-solid fa-map-pin" style="color: var(--ups-gold);"></i> @stop.FullAddress
+                            </div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                                Coordenadas: 
+                                @if (isError)
+                                {
+                                    <strong style="color: var(--accent-red);">Sin coordenadas válidas</strong>
+                                }
+                                else
+                                {
+                                    <strong style="color: var(--accent-blue);">Lat: @stop.Latitude.ToString("F6"), Lng: @stop.Longitude.ToString("F6")</strong>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action: Edit Form inline -->
+                    <div>
+                        <button type="button" onclick="toggleEditForm(@stop.Id)" class="btn-orion-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar Texto Manualmente
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Hidden inline edit form -->
+                <div id="editForm_@stop.Id" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-color);">
+                    <form asp-action="UpdateStopAddress" method="post">
+                        <input type="hidden" name="stopId" value="@stop.Id" />
+                        
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 150px; gap: 10px; align-items: end;">
+                            <div>
+                                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Calle / Avenida:</label>
+                                <input type="text" name="street" value="@stop.Street" required style="width: 100%; padding: 8px; border-radius: 6px; background: #0f172a; border: 1px solid var(--border-color); color: #fff;" />
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Altura / Número:</label>
+                                <input type="text" name="number" value="@stop.Number" required style="width: 100%; padding: 8px; border-radius: 6px; background: #0f172a; border: 1px solid var(--border-color); color: #fff;" />
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Ciudad:</label>
+                                <input type="text" name="city" value="@stop.City" required style="width: 100%; padding: 8px; border-radius: 6px; background: #0f172a; border: 1px solid var(--border-color); color: #fff;" />
+                            </div>
+                            <div>
+                                <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 8px; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-rotate"></i> Re-Geocodificar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleEditForm(stopId) {
+            const form = document.getElementById('editForm_' + stopId);
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+    </script>
+}
