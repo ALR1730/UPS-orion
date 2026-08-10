@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UPS ORION MVP</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <nav class="navbar-orion">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a class="nav-brand" asp-controller="Home" asp-action="Index">
+                <i class="fa-solid fa-truck-fast" style="color: var(--ups-gold);"></i>
+                <span>UPS ORION</span>
+                <span class="brand-badge">MVP PILOT</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li>
+                    <a class="nav-link-item" asp-controller="Home" asp-action="Index">
+                        <i class="fa-solid fa-house"></i> Inicio
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-item" asp-controller="Dispatch" asp-action="Index">
+                        <i class="fa-solid fa-file-csv"></i> Carga & Despacho (HU01-03)
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-item" asp-controller="Driver" asp-action="Index">
+                        <i class="fa-solid fa-mobile-screen-button"></i> App Conductor (HU04-06,10)
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-item" asp-controller="Supervisor" asp-action="Index">
+                        <i class="fa-solid fa-chart-line"></i> Supervisor (HU07,09)
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-container" role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer-orion">
+        <div class="container">
+            &copy; 2026 - UPS ORION Pilot MVP (C# .NET 10) - Sistema de Optimización de Rutas de Entrega
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
