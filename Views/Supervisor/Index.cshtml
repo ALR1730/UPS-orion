@@ -1,19 +1,176 @@
+@model OrionMVP.Controllers.SupervisorReportViewModel
 @{
-    ViewData["Title"] = "Panel Supervisor";
+    ViewData["Title"] = "Reporte de Comparación de Distancias (HU07)";
 }
 
 <div style="margin-bottom: 2rem;">
-    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">Panel de Control Supervisor</h1>
-    <p style="color: var(--text-muted);">Módulo de monitoreo de rutas, telemetría y gráficos de comparación de ahorro (HU07, HU08, HU09).</p>
+    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;">
+        <i class="fa-solid fa-chart-bar" style="color: var(--accent-green);"></i> Reporte de Comparación de Distancias (HU07)
+    </h1>
+    <p style="color: var(--text-muted);">Análisis de eficiencia: Comparación de Kilómetros Reales vs Promedio Histórico Manual del Piloto.</p>
 </div>
 
-<div class="glass-card">
-    <div style="text-align: center; padding: 3rem 1rem;">
-        <i class="fa-solid fa-chart-line" style="font-size: 3rem; color: var(--accent-green); margin-bottom: 1rem;"></i>
-        <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Estructura Base del Módulo Supervisor</h3>
-        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 1.5rem auto;">
-            Listo para recibir los reportes comparativos y monitoreo de despachos.
-        </p>
-        <span class="status-badge status-pending">Esperando HU07</span>
+<!-- KPI Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
+    
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+            KM Histórico Manual
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: #cbd5e1; margin-top: 4px;">
+            @Model.TotalHistoricalKm.ToString("N1") KM
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Base de comparación</div>
+    </div>
+
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+            KM Real Recorrido (ORION)
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-blue); margin-top: 4px;">
+            @Model.TotalRealKm.ToString("N1") KM
+        </div>
+        <div style="font-size: 0.8rem; color: var(--accent-blue); margin-top: 4px;">Odómetro Conductor</div>
+    </div>
+
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+            Kilómetros Ahorrados
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-green); margin-top: 4px;">
+            @Model.TotalSavedKm.ToString("N1") KM
+        </div>
+        <div style="font-size: 0.8rem; color: var(--accent-green); margin-top: 4px;">~@Model.EstimatedFuelSavedLiters Litros de Combustible</div>
+    </div>
+
+    <div class="glass-card">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+            % Ahorro Estimado
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--ups-gold); margin-top: 4px;">
+            <i class="fa-solid fa-leaf"></i> @Model.TotalFuelSavingsPercentage%
+        </div>
+        <div style="font-size: 0.8rem; color: var(--ups-gold); margin-top: 4px;">Eficiencia Algorítmica</div>
+    </div>
+
+</div>
+
+<!-- Chart.js Bar Chart -->
+<div class="glass-card" style="margin-bottom: 2.5rem;">
+    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-chart-column" style="color: var(--ups-gold);"></i> Gráfico Comparativo: Histórico Manual vs Recorrido Algorítmico ORION
+    </h3>
+
+    <div style="position: relative; height: 320px; width: 100%;">
+        <canvas id="savingsChart"></canvas>
     </div>
 </div>
+
+<!-- Detailed Routes Comparison Table -->
+<div class="glass-card">
+    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-table-list" style="color: var(--accent-blue);"></i> Detalle Comparativo por Ruta
+    </h3>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
+                    <th style="padding: 12px;">ID Ruta</th>
+                    <th style="padding: 12px;">Conductor</th>
+                    <th style="padding: 12px;">Histórico Manual</th>
+                    <th style="padding: 12px;">KM Real / Algoritmo</th>
+                    <th style="padding: 12px;">KM Ahorrados</th>
+                    <th style="padding: 12px;">% Ahorro Combustible</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var route in Model.Routes)
+                {
+                    double realKm = route.InitialKm.HasValue && route.FinalKm.HasValue 
+                        ? (route.FinalKm.Value - route.InitialKm.Value) 
+                        : (route.TotalDistanceKm > 0 ? route.TotalDistanceKm : route.Stops.Count * 3.2);
+
+                    double savedKm = Math.Max(0, route.BaselineDistanceKm - realKm);
+                    double pct = route.BaselineDistanceKm > 0 
+                        ? Math.Round((savedKm / route.BaselineDistanceKm) * 100.0, 1) 
+                        : 0.0;
+
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <td style="padding: 14px; font-weight: 700;">#@route.Id</td>
+                        <td style="padding: 14px; font-weight: 600;">@(route.Driver?.Name ?? "Sin Asignar")</td>
+                        <td style="padding: 14px; color: var(--text-muted);">@route.BaselineDistanceKm.ToString("N1") KM</td>
+                        <td style="padding: 14px; font-weight: 700; color: var(--accent-blue);">@realKm.ToString("N1") KM</td>
+                        <td style="padding: 14px; font-weight: 700; color: var(--accent-green);">+@savedKm.ToString("N1") KM</td>
+                        <td style="padding: 14px;">
+                            <span class="status-badge status-delivered">
+                                <i class="fa-solid fa-arrow-trend-down"></i> -@pct% Combustible
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+
+            const labels = [@Html.Raw(string.Join(",", Model.Routes.Select(r => $"\"Ruta #{r.Id}\"")))];
+            const historicalData = [@string.Join(",", Model.Routes.Select(r => r.BaselineDistanceKm.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)))];
+            const realData = [@string.Join(",", Model.Routes.Select(r => {
+                double realKm = r.InitialKm.HasValue && r.FinalKm.HasValue ? (r.FinalKm.Value - r.InitialKm.Value) : (r.TotalDistanceKm > 0 ? r.TotalDistanceKm : r.Stops.Count * 3.2);
+                return realKm.ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+            }))];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'KM Promedio Histórico Manual',
+                            data: historicalData,
+                            backgroundColor: 'rgba(148, 163, 184, 0.5)',
+                            borderColor: '#94a3b8',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'KM Real Recorrido (Algoritmo ORION)',
+                            data: realData,
+                            backgroundColor: 'rgba(255, 181, 0, 0.8)',
+                            borderColor: '#FFB500',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f8fafc', font: { family: 'Plus Jakarta Sans', weight: '600' } }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        y: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            title: { display: true, text: 'Kilómetros (KM)', color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
