@@ -19,12 +19,18 @@ namespace OrionMVP.Controllers
         private readonly OrionDbContext _db;
         private readonly IAddressImportService _importService;
         private readonly IGeocodingService _geocodingService;
+        private readonly IRouteOptimizerService _optimizerService;
 
-        public DispatchController(OrionDbContext db, IAddressImportService importService, IGeocodingService geocodingService)
+        public DispatchController(
+            OrionDbContext db, 
+            IAddressImportService importService, 
+            IGeocodingService geocodingService,
+            IRouteOptimizerService optimizerService)
         {
             _db = db;
             _importService = importService;
             _geocodingService = geocodingService;
+            _optimizerService = optimizerService;
         }
 
         public async Task<IActionResult> Index()
@@ -83,10 +89,11 @@ namespace OrionMVP.Controllers
             _db.Routes.Add(newRoute);
             await _db.SaveChangesAsync();
 
-            // Auto-trigger initial geocoding
+            // Auto geocode and auto optimize sequence
             await InternalGeocodeRouteStops(newRoute.Id);
+            var optResult = await _optimizerService.OptimizeRouteAsync(newRoute.Id);
 
-            TempData["SuccessMessage"] = $"¡Éxito! Se cargaron {result.TotalRead} direcciones y se procesó la geocodificación inicial.";
+            TempData["SuccessMessage"] = $"¡Éxito! Se cargaron {result.TotalRead} direcciones. {optResult.Message}";
             return RedirectToAction("RouteDetails", new { id = newRoute.Id });
         }
 
@@ -109,8 +116,26 @@ namespace OrionMVP.Controllers
         [HttpPost]
         public async Task<IActionResult> GeocodeRoute(int routeId)
         {
-            int updatedCount = await InternalGeocodeRouteStops(routeId);
-            TempData["SuccessMessage"] = $"Se geocodificaron las paradas de la ruta #{routeId} mediante API externa.";
+            await InternalGeocodeRouteStops(routeId);
+            var optResult = await _optimizerService.OptimizeRouteAsync(routeId);
+            TempData["SuccessMessage"] = $"Paradas re-geocodificadas y secuencia optimizada en {optResult.ExecutionTimeMs} ms.";
+            return RedirectToAction("RouteDetails", new { id = routeId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OptimizeSequence(int routeId)
+        {
+            var optResult = await _optimizerService.OptimizeRouteAsync(routeId);
+            if (optResult.IsSuccess)
+            {
+                TempData["SuccessMessage"] = $"Algoritmo Secuenciador ORION: {optResult.Message}";
+                TempData["BenchmarkTime"] = $"{optResult.ExecutionTimeMs} ms";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = optResult.Message;
+            }
+
             return RedirectToAction("RouteDetails", new { id = routeId });
         }
 
@@ -127,7 +152,6 @@ namespace OrionMVP.Controllers
             stop.Number = number;
             stop.City = city;
 
-            // Re-geocode updated address
             var geoResult = await _geocodingService.GeocodeAddressAsync(street, number, city);
             if (geoResult.IsSuccess)
             {
@@ -145,7 +169,10 @@ namespace OrionMVP.Controllers
 
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Dirección de la parada #{stop.SequenceOrder} actualizada y re-geocodificada correctamente.";
+            // Re-optimize sequence after address change
+            await _optimizerService.OptimizeRouteAsync(stop.RouteId);
+
+            TempData["SuccessMessage"] = $"Dirección de la parada actualizada, re-geocodificada y secuencia recalculada.";
             return RedirectToAction("RouteDetails", new { id = stop.RouteId });
         }
 
@@ -157,7 +184,8 @@ namespace OrionMVP.Controllers
                       "Calle Erronea Invalida,999,Desconocido,Cliente Con Error\n" +
                       "Av. Santa Fe,2500,Buenos Aires,Maria Gomez\n" +
                       "Calle Florida,450,Buenos Aires,Tech Corp\n" +
-                      "Av. Cabildo,3000,Buenos Aires,Distribuidora Sur\n";
+                      "Av. Cabildo,3000,Buenos Aires,Distribuidora Sur\n" +
+                      "Av. Rivadavia,5400,Buenos Aires,Lucia Fernandez\n";
 
             var bytes = Encoding.UTF8.GetBytes(csv);
             return File(bytes, "text/csv", "Plantilla_Direcciones_UPS.csv");

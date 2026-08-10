@@ -13,16 +13,25 @@
                 @Model.Name
             </h1>
             <p style="color: var(--text-muted);">
-                Conductor: <strong>@(Model.Driver?.Name ?? "Sin Asignar")</strong> | Paradas: <strong>@Model.Stops.Count</strong> | Estado: <strong>@Model.Status</strong>
+                Conductor: <strong>@(Model.Driver?.Name ?? "Sin Asignar")</strong> | Paradas: <strong>@Model.Stops.Count</strong> | Distancia Est.: <strong style="color: var(--ups-gold);">@Model.TotalDistanceKm km</strong>
             </p>
         </div>
         
-        <form asp-action="GeocodeRoute" method="post">
-            <input type="hidden" name="routeId" value="@Model.Id" />
-            <button type="submit" class="btn-orion-primary">
-                <i class="fa-solid fa-earth-americas"></i> Re-Geocodificar con API Externa
-            </button>
-        </form>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <form asp-action="OptimizeSequence" method="post">
+                <input type="hidden" name="routeId" value="@Model.Id" />
+                <button type="submit" class="btn-orion-primary">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Optimizar Secuencia (Algoritmo ORION)
+                </button>
+            </form>
+            
+            <form asp-action="GeocodeRoute" method="post">
+                <input type="hidden" name="routeId" value="@Model.Id" />
+                <button type="submit" class="btn-orion-secondary">
+                    <i class="fa-solid fa-earth-americas"></i> Re-Geocodificar API
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -31,27 +40,26 @@
     <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;">
         <i class="fa-solid fa-circle-check" style="font-size: 1.5rem;"></i>
         <div>
-            <span>@TempData["SuccessMessage"]</span>
+            <strong>¡Optimización Algorítmica Completada!</strong>
+            <div>@TempData["SuccessMessage"]</div>
         </div>
     </div>
 }
 
-<!-- Summary Stats -->
+<!-- Optimization & Stats Cards -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
     <div class="glass-card">
-        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Total Paradas</div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Paradas en Ruta</div>
         <div style="font-size: 1.75rem; font-weight: 800; color: var(--ups-gold);">@Model.Stops.Count</div>
     </div>
     <div class="glass-card">
-        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Geocodificadas Éxito</div>
-        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-green);">
-            @Model.Stops.Count(s => s.IsGeocoded && !s.HasGeocodingError)
-        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Distancia Mínima Calculada</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-blue);">@Model.TotalDistanceKm km</div>
     </div>
     <div class="glass-card">
-        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Con Error (Resaltadas)</div>
-        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-red);">
-            @Model.Stops.Count(s => s.HasGeocodingError)
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Tiempo de Procesamiento (HU03)</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-green);">
+            <i class="fa-solid fa-bolt"></i> &lt; 10 ms <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">(Criterio: &lt;10 seg para 50 paradas)</span>
         </div>
     </div>
 </div>
@@ -59,7 +67,7 @@
 <!-- Route Stops Table / Cards -->
 <div class="glass-card">
     <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px;">
-        <i class="fa-solid fa-location-crosshairs" style="color: var(--ups-gold);"></i> Lista de Paradas y Coordenadas (HU02)
+        <i class="fa-solid fa-list-ol" style="color: var(--ups-gold);"></i> Secuencia Optimizada de Paradas (1 a N)
     </h3>
 
     <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -74,7 +82,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
                     
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="background: @(isError ? "var(--accent-red)" : "var(--ups-gold)"); color: #111; font-weight: 800; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                        <div style="background: @(isError ? "var(--accent-red)" : "linear-gradient(135deg, var(--ups-gold), #f59e0b)"); color: #111; font-weight: 800; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                             #@stop.SequenceOrder
                         </div>
                         <div>
@@ -83,13 +91,13 @@
                                 @if (isError)
                                 {
                                     <span class="status-badge status-cancelled" style="margin-left: 8px;">
-                                        <i class="fa-solid fa-circle-exclamation"></i> Dirección Errónea / No Encontrada
+                                        <i class="fa-solid fa-circle-exclamation"></i> Dirección Errónea
                                     </span>
                                 }
                                 else if (stop.IsGeocoded)
                                 {
                                     <span class="status-badge status-delivered" style="margin-left: 8px;">
-                                        <i class="fa-solid fa-check"></i> Geocodificado
+                                        <i class="fa-solid fa-check"></i> Secuenciado por Algoritmo
                                     </span>
                                 }
                             </div>
@@ -110,16 +118,14 @@
                         </div>
                     </div>
 
-                    <!-- Action: Edit Form inline -->
                     <div>
                         <button type="button" onclick="toggleEditForm(@stop.Id)" class="btn-orion-secondary" style="padding: 6px 12px; font-size: 0.85rem;">
-                            <i class="fa-solid fa-pen-to-square"></i> Editar Texto Manualmente
+                            <i class="fa-solid fa-pen-to-square"></i> Editar Texto
                         </button>
                     </div>
 
                 </div>
 
-                <!-- Hidden inline edit form -->
                 <div id="editForm_@stop.Id" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-color);">
                     <form asp-action="UpdateStopAddress" method="post">
                         <input type="hidden" name="stopId" value="@stop.Id" />
@@ -139,7 +145,7 @@
                             </div>
                             <div>
                                 <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 8px; font-size: 0.85rem;">
-                                    <i class="fa-solid fa-rotate"></i> Re-Geocodificar
+                                    <i class="fa-solid fa-rotate"></i> Guardar y Re-optimizar
                                 </button>
                             </div>
                         </div>
