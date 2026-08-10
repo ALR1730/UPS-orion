@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using OrionMVP.Data;
+using OrionMVP.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IAddressImportService, AddressImportService>();
 
 // Register DbContext with SQLite
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=orion.db";

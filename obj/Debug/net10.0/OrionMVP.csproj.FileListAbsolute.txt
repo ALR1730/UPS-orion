@@ -213,3 +213,6 @@ C:\Users\DELL\Desktop\proyecto\obj\Debug\net10.0\refint\OrionMVP.dll
 C:\Users\DELL\Desktop\proyecto\obj\Debug\net10.0\OrionMVP.pdb
 C:\Users\DELL\Desktop\proyecto\obj\Debug\net10.0\OrionMVP.genruntimeconfig.cache
 C:\Users\DELL\Desktop\proyecto\obj\Debug\net10.0\ref\OrionMVP.dll
+C:\Users\DELL\Desktop\proyecto\obj\Debug\net10.0\OrionMVP.sourcelink.json
+C:\Users\DELL\Desktop\proyecto\bin\Debug\net10.0\ExcelDataReader.dll
+C:\Users\DELL\Desktop\proyecto\bin\Debug\net10.0\ExcelDataReader.DataSet.dll
