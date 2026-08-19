@@ -18,8 +18,9 @@
     *   **Josteen Mayobanex Del Orbe (20240270@itla.edu.do):** Aseguramiento de la Calidad (QA), Pruebas Unitarias de Rutas y Validación de Criterios de Aceptación.
     *   **yassil del orbe (20242536@itla.edu.do):** Pruebas de Carga e Integración de Datos, Simulación de Campo de los 5 Conductores Piloto.
 
-### 2. Herramienta de Gestión (Jira Software)
-*   **Enlace de Acceso:** [Tablero Jira ORION - ITLA](https://itla-adm.atlassian.net/jira/software/projects/SCRUM/boards/1)
+### 2. Herramientas de Gestión y Repositorio de Código
+*   **Tablero de Gestión (Jira Software):** [Tablero Jira ORION - ITLA](https://itla-adm.atlassian.net/jira/software/projects/SCRUM/boards/1)
+*   **Repositorio Oficial de Código (GitHub):** [GitHub - ALR1730/UPS-orion](https://github.com/ALR1730/UPS-orion)
 *   **Evidencia del Tablero Activo en Jira (Flujo Scrum: Por hacer ➔ En curso ➔ En revisión ➔ Finalizado):**
 
 ![Tablero Activo en Jira Software - Flujo de Trabajo Scrum](docs/Screenshot%202026-08-19%20124257.png)
