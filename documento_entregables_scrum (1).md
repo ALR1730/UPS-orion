@@ -177,43 +177,75 @@
 
 ![Backlog del Sprint 1 con las 7 Historias de Usuario estimadas (14 Story Points) y Épicas SCRUM-43 y SCRUM-44](docs/Screenshot%202026-08-19%20123639.png)
 
-### 2. Minuta de la Daily Scrum
+### 2. Minuta de la Daily Scrum Extraordinaria (Realineación del Equipo)
 *   **Fecha de la Sesión:** 19 de Agosto de 2026
-*   **Participantes:** Developers y Scrum Master (Juan Solano)
-*   **Registro de Respuestas de la Dinámica Ágile:**
-    *   *Anthonny Soriano (Base de Datos):* "Ayer terminé el esquema de tablas en Supabase y poblé los 5 choferes fijos. Hoy apoyaré a Cesar conectando el backend del CSV. No tengo bloqueos técnicos."
-    *   *Cesar Reyes (Ingesta e Inserción):* "Ayer programé la lectura básica del archivo `.csv` en Node.js/Python. Hoy conectaré la inserción masiva a la tabla de artículos de Anthonny y empezaré la lógica matemática del vecino más cercano. Sin impedimentos."
-    *   *Luis Ortega (Frontend Móvil):* "Ayer maqueté la vista de lista responsive en HTML/CSS. Hoy conectaré la consulta para que el select de choferes jale las paradas directamente de la base de datos de forma dinámica. Todo fluye."
-    *   *Angel Morillo (Integración GPS):* "Ayer estructuré la cadena de texto de los enlaces de Google Maps. Hoy integraré los botones en las tarjetas móviles que está desarrollando Luis. Todo bajo control."
-    *   *Jostin Perez (Módulo Odómetro):* "Ayer diseñé los inputs numéricos de entrada. Hoy programaré la lógica de validación para asegurar que el kilometraje final no sea menor al inicial y conectaré el guardado masivo."
-    *   *Emil Montilla & Jhois Collado (Panel Administrativo):* "Ayer maquetamos la tabla web del supervisor. Hoy inyectaremos las consultas SQL para cruzar los artículos de Cesar con los kilómetros finales de Jostin y generaremos el trigger de exportación a CSV."
-    *   *Josteen Del Orbe & yassil del orbe (QA / Pruebas):* "Ayer estructuramos la plantilla CSV de prueba con coordenadas reales de la zona piloto. Hoy iniciaremos pruebas funcionales de extremo a extremo simulando el flujo de los 5 choferes sobre las vistas de Luis y los reportes de Emil."
+*   **Facilitador:** Scrum Master (Juan Ectiversom Celedonio Solano)
+*   **Participantes:** Equipo Completo (Product Owner, Developers y QA Engineers)
+*   **Contexto Crítico:** Sesión de sincronización obligatoria convocada tras un **retraso crítico acumulado de 4 días** al inicio del proyecto, provocado por una marcada falta de comunicación entre los integrantes, desalineación en las responsabilidades de cada módulo y ausencia de canales de coordinación técnica unificados.
+
+*   **Registro de Intervenciones de la Dinámica Ágil (Las 3 Preguntas de Scrum):**
+    *   **Juan Solano (Scrum Master - Facilitador):**  
+        *"Durante los primeros 4 días el equipo trabajó en silos aislados: el backend esperaba especificaciones que frontend no había definido y QA no tenía criterios claros de prueba. Esta descoordinación y falta de comunicación nos costó 4 días de atraso sobre el cronograma inicial. Hoy abrimos esta Daily para transparentar bloqueos, sincronizar interfaces y definir el plan de choque que nos permita entregar el MVP al 100%."*
+    *   **Angel Rosario (Product Owner):**  
+        *"Mi bloqueo en los primeros 4 días fue que las dudas sobre el alcance del MVP (si incluir o no autenticación compleja y mapas embebidos) se discutieron de forma dispersa sin llegar a acuerdos claros. Ayer redefiní el alcance recortando lo superfluo y priorizando el flujo nuclear (CSV -> Secuenciación -> Conductor -> Reporte). Hoy estaré disponible en tiempo real para validar las historias. No tengo más bloqueos."*
+    *   **Anthonny Soriano (Base de Datos & Arquitectura):**  
+        *   *¿Qué hice?:* "Estuve frenado 4 días porque no teníamos acordada la estructura de los datos ni qué base de datos usaríamos (SQL vs NoSQL). Ayer definí el esquema relacional en SQLite/Supabase con las entidades `Drivers`, `Routes` y `RouteStops`, y sembré los 5 choferes fijos del piloto."  
+        *   *¿Qué haré hoy?:* "Proveer la cadena de conexión e integrar el contexto de datos con la ingesta CSV de Cesar."  
+        *   *Bloqueos:* "Ninguno actualmente tras acordar el esquema común."
+    *   **Cesar Reyes (Ingesta CSV & Algoritmo de Secuenciación):**  
+        *   *¿Qué hice?:* "Perdí los primeros 4 días programando un módulo de carga aislado sin saber el formato exacto de coordenadas que entregarían las QA ni la tabla donde se guardaría. Ayer sincronicé con Anthonny y completé la lectura de archivos CSV y el algoritmo Nearest Neighbor con Haversine."  
+        *   *¿Qué haré hoy?:* "Conectar la inserción automática y la reordenación correlativa (1..N) para alimentar la vista del conductor."  
+        *   *Bloqueos:* "Resuelto el desfase de comas/puntos decimales mediante sanitización interna."
+    *   **Luis Ortega (Frontend Móvil Conductor):**  
+        *   *¿Qué hice?:* "Estuve esperando durante 4 días los endpoints del backend para maquetar la interfaz móvil. Ayer decidí avanzar con la UI Glassmorphism en HTML5/CSS y crear el selector interactivo de choferes."  
+        *   *¿Qué haré hoy?:* "Conectar las tarjetas de entrega y la pantalla de bloqueo por odómetro inicial con los datos reales de la ruta."  
+        *   *Bloqueos:* "Ninguno; ya coordiné directamente con Jostin los nombres de los campos de odómetro."
+    *   **Angel Morillo (Integración GPS & Navegación):**  
+        *   *¿Qué hice?:* "Al inicio hubo confusión sobre si debíamos integrar un SDK de mapas de pago o usar URLs directas, lo que nos estancó. Ayer construí la plantilla de Deep Linking universal a Google Maps Web (`query={lat},{lng}`)."  
+        *   *¿Qué haré hoy?:* "Inyectar el botón 'Ir a la entrega' dentro de cada tarjeta maquetada por Luis."  
+        *   *Bloqueos:* "Sin impedimentos técnicos."
+    *   **Jostin Perez (Módulo de Odómetros & Control de Jornada):**  
+        *   *¿Qué hice?:* "No teníamos claro si el odómetro se registraba por parada o por día completo, lo que retrasó la lógica de negocio. Ayer definí la validación de inicio obligatorio (Odómetro Inicial) y cierre de jornada (Odómetro Final >= Inicial)."  
+        *   *¿Qué haré hoy?:* "Implementar el cálculo de distancia neta (`Final - Inicial`) y disparar el estado 'Finalizado'."  
+        *   *Bloqueos:* "Ninguno."
+    *   **Emil Montilla & Jhois Collado (Panel Administrativo Supervisor):**  
+        *   *¿Qué hicieron?:* "El retraso de 4 días en la base de datos nos impedía estructurar las consultas de analítica. Ayer diseñamos la tabla de monitoreo en tiempo real y el cálculo de ahorro de combustible contra la línea base histórica."  
+        *   *¿Qué harán hoy?:* "Vincular el botón de exportación CSV con codificación compatible con Excel (UTF-8 BOM) y verificar el resumen de KPIs."  
+        *   *Bloqueos:* "Todo coordinado con el equipo backend."
+    *   **Josteen Del Orbe & Yassil Del Orbe (QA Engineers / Pruebas):**  
+        *   *¿Qué hicieron?:* "La falta de un canal centralizado de comunicación impidió que tuviéramos los casos de prueba listos a tiempo. Ayer construimos la batería de pruebas automatizadas y el dataset piloto de 15 artículos urbanos en Santo Domingo."  
+        *   *¿Qué harán hoy?:* "Ejecutar pruebas End-to-End en vivo (HU01 a HU07) simulando el flujo completo de los 5 conductores y validando la descarga del reporte final."  
+        *   *Bloqueos:* "Ninguno; ambiente de pruebas listo y operativo."
 
 ### 3. Registro de Impedimentos (Gestión de Bloqueos)
-*   **Impedimento Detectado:** "El archivo CSV de prueba del despachador arrojaba fallas en la base de datos debido a que los valores de latitud y longitud venían formateados con comas en lugar de puntos decimales anglosajones, corrompiendo la geolocalización."
-*   **Gestión y Resolución (Acción del Scrum Master):** El Scrum Master (Juan Solano) convocó a una sesión técnica exprés de 15 minutos entre Cesar Reyes (Backend) y las QA (Josteen y Yassil). Se resolvió implementar una función de sanitización en el código de la HU02 que reemplace automáticamente cualquier coma por punto antes de la inserción SQL, y se actualizó la documentación de la plantilla compartida al despachador. Bloqueo removido en 45 minutos.
+*   **Impedimento Principal #1 (Organizacional - 4 Días de Atraso):**  
+    *   *Descripción:* "Falta de comunicación asertiva y coordinación operativa durante los primeros 4 días del Sprint. Los desarrolladores iniciaron tareas individuales sin un canal de comunicación oficial, sin contratos de datos acordados y sin claridad en la arquitectura, provocando retrabajo y un desfase crítico en la entrega."  
+    *   *Gestión del Scrum Master (Juan Solano):* Convocó a una sesión de emergencia presencial/virtual de realineación técnica. Se estableció un canal único de Discord/WhatsApp con hilos por épica, se unificó el repositorio Git con ramas estandarizadas y se acordó un contrato de datos estricto para las 7 Historias de Usuario. El equipo recuperó el ritmo en una jornada intensiva de desarrollo continuo.
+*   **Impedimento Técnico #2 (Formato Decimal en Ingesta CSV):**  
+    *   *Descripción:* "El archivo CSV de prueba arrojaba excepciones en la base de datos debido a que los valores de latitud y longitud venían formateados con comas en lugar de puntos decimales anglosajones, corrompiendo la geolocalización."  
+    *   *Gestión y Resolución:* El Scrum Master coordinó una sesión técnica exprés entre Cesar Reyes (Backend) y las QA (Josteen y Yassil). Se implementó sanitización automática en la HU02 (`AddressImportService`) que convierte comas a puntos decimales con `CultureInfo.InvariantCulture`. Bloqueo solucionado en 45 minutos.
 
 ---
 
 ## 🏁 SECCIÓN 4: CIERRE, REVISIÓN Y APRENDIZAJE
 
 ### 1. Sprint Review (Presentación de Software Funcional)
-*   **Enfoque de la Demostración:** Presentación en vivo ante los evaluadores del flujo completo del sistema ORION corriendo sobre código real en lugar de diapositivas estáticas.
+*   **Enfoque de la Demostración:** Presentación en vivo ante los evaluadores del flujo completo del sistema ORION corriendo sobre código real en lugar de diapositivas estáticas, demostrando la recuperación total tras el retraso inicial.
 *   **Flujo de la Demo Realizada:**
-    1.  El Product Owner (Angel Rosario) abre el panel administrativo y carga un archivo `.csv` de prueba con 15 artículos de entrega para una zona urbana.
-    2.  El sistema procesa el archivo, muestra la alerta de éxito y ejecuta el algoritmo, ordenando las paradas del 1 al 15 en base a cercanía lineal.
-    3.  El Developer Luis Ortega abre la vista móvil responsive y simula ser el Conductor #3 desde el inspector del navegador. Selecciona su nombre en el menú rápido.
-    4.  Aparece el formulario de kilometraje; introduce el odómetro inicial "50,200 km" y se despliega la lista ordenada de artículos con sus direcciones.
-    5.  Se hace clic en el botón "Ir a la entrega" de la parada #1; el sistema invoca de forma externa la interfaz oficial de Google Maps web con las coordenadas correctas.
-    6.  Se marcan todos los artículos como "Entregados" y se digita el kilometraje final "50,245 km".
-    7.  El supervisor Emil Montilla refresca su tablero y muestra la fila actualizada del Conductor #3 detallando los 45 kilómetros netos recorridos, presionando el botón para descargar el reporte CSV final en su computadora.
+    1.  El Product Owner (Angel Rosario) abre el panel administrativo y carga el archivo `.csv` oficial de 15 paradas urbanas.
+    2.  El sistema procesa el archivo, ejecuta el algoritmo Nearest Neighbor y secuencia las paradas del 1 al 15 en menos de 10 milisegundos.
+    3.  El Developer Luis Ortega abre la vista móvil responsive y selecciona al Conductor #3 (*José Gómez* - `UPS-TRUCK-309`).
+    4.  Aparece la pantalla de bloqueo de inicio de jornada; introduce el odómetro inicial "50,200 km" y se desbloquea la lista ordenada de artículos.
+    5.  Se presiona el botón "Ir a la entrega" de la parada #1, abriendo Google Maps Web con las coordenadas exactas de Santo Domingo.
+    6.  Se marcan las 15 paradas como "Entregado" y se digita el kilometraje final "50,245 km".
+    7.  El supervisor Emil Montilla refresca su tablero, visualizando los 45.0 KM netos recorridos, 12.0 KM ahorrados (21% de reducción de combustible) y descarga el reporte consolidado `.csv` compatible con Excel.
 *   **Estatus de Historias:** 7 Historias de Usuario completadas al 100% bajo conformidad del Product Owner al cumplir con la *Definition of Done*.
 
 ### 2. Sprint Retrospective (Plan de Mejora Continua)
-*   **¿Qué salió bien?:** La estrategia ágil de recortar el alcance (eliminar logins pesados, geocodificación externa por texto y soporte Excel) permitió levantar la infraestructura de software funcional en menos de 24 horas. La división técnica por micro-componentes evitó colisiones en los repositorios de código.
-*   **¿Qué no salió bien?:** La estimación inicial de algunos Story Points fue ajustada sobre la marcha debido a problemas con el formato decimal del CSV de entrada, lo que causó estrés en el backend durante las primeras horas del día.
-*   **¿Qué podemos mejorar?:** Implementar de forma obligatoria un checklist o contrato de datos para cualquier archivo externo antes de iniciar la programación de la ingesta de datos.
-*   **Acción de Mejora Concreta (Próximo Sprint):** "Diseñar un validador estricto de esquemas JSON/CSV del lado del cliente en el frontend antes de enviar los datos al servidor, asignando a Cesar Reyes como responsable técnico de su implementación para la Fase 2."
+*   **¿Qué salió bien?:** La capacidad de reacción del equipo tras la Daily Scrum extraordinaria de realineación. La simplificación del alcance y el enfoque en micro-componentes desacoplados permitieron desarrollar, probar y desplegar las 7 Historias de Usuario en tiempo récord.
+*   **¿Qué no salió bien?:** La severa falta de comunicación y coordinación al arranque del proyecto nos costó 4 días de inactividad efectiva, forzando un esfuerzo extraordinario al final del Sprint para compensar el tiempo perdido.
+*   **¿Qué podemos mejorar?:** No iniciar ninguna línea de código sin antes haber celebrado la Sprint Planning con contratos de interfaces claros, canales de chat activos y asignación explícita de responsabilidades desde el Día 1.
+*   **Acción de Mejora Concreta (Próximo Sprint):** "Establecer de forma innegociable Dailies síncronas a primera hora del día, matrices de contratos de API/Datos firmadas entre Frontend y Backend antes de programar, y un canal de alertas tempranas para que ningún bloqueo dure más de 2 horas sin escalar al Scrum Master."
 
 ---
 
@@ -221,10 +253,37 @@
 
 *Nota: Cada integrante debe completar esta plantilla de forma personal respondiendo con base en su experiencia técnica y metodológica en el rol asignado.*
 
-### Plantilla de Evaluación Individual
-1.  **¿Cómo fue su experiencia trabajando en equipo?**
-2.  **¿Cómo fue trabajar utilizando la metodología Scrum?**
-3.  **¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?**
-4.  **¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?**
-5.  **¿Qué considera que pudo haberse realizado mejor en la organización del equipo?**
-6.  **¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?**
+### 📄 Plantilla de Evaluación Individual (En Blanco para el Equipo)
+1. **¿Cómo fue su experiencia trabajando en equipo?**
+2. **¿Cómo fue trabajar utilizando la metodología Scrum?**
+3. **¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?**
+4. **¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?**
+5. **¿Qué considera que pudo haberse realizado mejor en la organización del equipo?**
+6. **¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?**
+
+---
+
+### 👤 Evaluación Individual - Product Owner (Angel Luis Rosario)
+
+* **Nombre del Integrante:** Angel Luis Rosario  
+* **Rol en el Sprint:** Product Owner (PO)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia en este proyecto fue sumamente retadora y formativa. Al inicio del Sprint enfrentamos una marcada falta de comunicación y descoordinación interna, donde los miembros trabajaban de manera aislada sin compartir avances ni reportar bloqueos a tiempo, lo que generó un estancamiento de 4 días en el cronograma. Esta situación me exigió asumir un rol de liderazgo constante y proactivo para alinear las expectativas, guiar las decisiones de diseño y asegurar que todos los componentes convergieran en un producto coherente. A pesar de las fricciones iniciales, logramos canalizar la energía del equipo en la recta final para concretar una entrega funcional y exitosa."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Trabajar con Scrum me permitió comprender que la agilidad no radica en la velocidad con la que se escribe código, sino en la disciplina de la comunicación, la transparencia y la capacidad de adaptación. El marco Scrum evidenció con rapidez las fallas de coordinación tempranas y nos brindó las herramientas necesarias (el refinamiento de historias, la redefinición del Backlog con base en el Product Goal y la Daily de emergencia) para corregir el rumbo y entregar valor tangible en un ciclo corto de 1 semana."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel metodológico:** *"Aprendí la vital importancia de establecer Criterios de Aceptación (AC) milimétricamente detallados y contratos de datos rigurosos desde el primer momento. Si el PO no delimita con absoluta claridad qué entra y qué no entra en el MVP, el equipo tiende a dispersarse en funcionalidades accesorias."*
+> * **A nivel técnico:** *"Profundicé en el valor de las arquitecturas desacopladas (Clean MVC en C# .NET, bases de datos ligeras con SQLite y cálculo geométrico de distancias por Haversine), comprendiendo cómo una infraestructura bien estructurada facilita las pruebas automatizadas y la integración continua sin dependencias externas pesadas."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El mayor obstáculo fue la barrera de comunicación y la falta de sincronización inicial entre las diferentes partes del sistema (base de datos, ingesta de archivos y frontend móvil). Tuve que intervenir de manera continua para disipar dudas de negocio, clarificar los flujos de los 5 conductores, estructurar los formatos de datos (como la sanitización de coordenadas decimales y los odómetros) y supervisar que cada historia cumpliera estrictamente la Definition of Done para salvar la entrega del proyecto tras el desfase inicial."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Considero que debimos establecer acuerdos de trabajo en equipo (Team Working Agreements) y canales oficiales de comunicación unificados desde el Día 1, en lugar de asumir que la coordinación se daría de forma espontánea. Asimismo, una sesión de Sprint Planning más exhaustiva con validación cruzada de dependencias técnicas entre desarrolladores y QA hubiese evitado los 4 días de retraso inicial."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint aplicaría como regla innegociable: (1) Dailies síncronas obligatorias a primera hora con un límite estricto de tiempo para detectar bloqueos en menos de 24 horas; (2) firmas de contratos de interfaces de datos (JSON/CSV) antes de tirar la primera línea de código; y (3) fomentar una cultura de comunicación abierta y temprana donde cualquier duda sobre el alcance se plantee de inmediato al Product Owner sin esperar a que se acumulen retrasos."*
