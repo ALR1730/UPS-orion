@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - UPS ORION MVP</title>
+    <title>@ViewData["Title"] - ORION MVP Piloto</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
     <nav class="navbar-orion">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1280px; margin: 0 auto;">
             <a class="nav-brand" asp-controller="Home" asp-action="Index">
                 <i class="fa-solid fa-truck-fast" style="color: var(--ups-gold);"></i>
-                <span>UPS ORION</span>
-                <span class="brand-badge">MVP PILOT</span>
+                <span>ORION MVP</span>
+                <span class="brand-badge">PILOTO 5 CONDUCTORES</span>
             </a>
             
             <ul class="nav-links">
@@ -24,17 +24,17 @@
                 </li>
                 <li>
                     <a class="nav-link-item" asp-controller="Dispatch" asp-action="Index">
-                        <i class="fa-solid fa-file-csv"></i> Carga & Despacho (HU01-03)
+                        <i class="fa-solid fa-file-csv"></i> Despacho CSV (HU01-03)
                     </a>
                 </li>
                 <li>
                     <a class="nav-link-item" asp-controller="Driver" asp-action="Index">
-                        <i class="fa-solid fa-mobile-screen-button"></i> App Conductor (HU04-06,10)
+                        <i class="fa-solid fa-mobile-screen-button"></i> App Móvil (HU04-06)
                     </a>
                 </li>
                 <li>
                     <a class="nav-link-item" asp-controller="Supervisor" asp-action="Index">
-                        <i class="fa-solid fa-chart-line"></i> Supervisor (HU07,09)
+                        <i class="fa-solid fa-chart-line"></i> Supervisor (HU07)
                     </a>
                 </li>
             </ul>
@@ -46,8 +46,14 @@
     </main>
 
     <footer class="footer-orion">
-        <div class="container">
-            &copy; 2026 - UPS ORION Pilot MVP (C# .NET 10) - Sistema de Optimización de Rutas de Entrega
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                &copy; 2026 - ORION MVP Piloto (C# ASP.NET Core) - Proyecto Final Scrum ITLA
+            </div>
+            <div style="display: flex; gap: 15px; font-size: 0.85rem;">
+                <span style="color: var(--ups-gold); font-weight: 700;">Sprint 1: 14 SP</span>
+                <span style="color: var(--accent-green); font-weight: 700;">7 Historias Finalizadas</span>
+            </div>
         </div>
     </footer>
 

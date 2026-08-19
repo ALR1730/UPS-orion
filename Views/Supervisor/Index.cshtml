@@ -1,72 +1,56 @@
 @model OrionMVP.Controllers.SupervisorReportViewModel
 @{
-    ViewData["Title"] = "Panel Supervisor & Monitoreo de Despacho (HU09)";
+    ViewData["Title"] = "Panel Supervisor & Reporte Consolidado (HU07)";
 }
 
 <div style="margin-bottom: 2rem;">
-    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem;">
-        <i class="fa-solid fa-user-shield" style="color: var(--ups-gold);"></i> Panel de Control de Despacho (HU09)
-    </h1>
-    <p style="color: var(--text-muted);">Supervisión en tiempo real del estado de jornada de conductores y progreso de paradas completadas.</p>
-</div>
-
-@{
-    var dbHealth = ViewBag.DbHealth as OrionMVP.Services.DatabaseHealthDto;
-}
-
-@if (dbHealth != null)
-{
-    <div class="glass-card" style="margin-bottom: 2rem; border: 1px solid rgba(56, 189, 248, 0.3);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <h3 style="font-weight: 700; font-size: 1.1rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-database"></i> Base de Datos Independiente del Piloto (HU08)
-                </h3>
-                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
-                    Proveedor: <strong>@dbHealth.Provider</strong> | Cadena: <code>@dbHealth.ConnectionString</code>
-                </div>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <span class="status-badge status-delivered">
-                    <i class="fa-solid fa-server"></i> Conectado & Operativo
-                </span>
-                <span class="status-badge status-active">
-                    <i class="fa-solid fa-hard-drive"></i> Tamaño: @dbHealth.DatabaseSizeKb KB
-                </span>
-            </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <span class="brand-badge"><i class="fa-solid fa-shield-halved"></i> ÉPICA SCRUM-44 (ANALÍTICA & AUDITORÍA)</span>
+            <h1 style="font-size: 2rem; font-weight: 800; margin-top: 0.35rem; margin-bottom: 0.25rem;">
+                <i class="fa-solid fa-chart-line" style="color: var(--ups-gold);"></i> Panel de Control Administrativo (HU07)
+            </h1>
+            <p style="color: var(--text-muted);">Consolidado de métricas de telemetría de campo, validación de odómetros y exportación de auditoría.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); font-size: 0.85rem;">
-            <div>Rutas Almacenadas: <strong style="color: var(--ups-gold);">@dbHealth.TotalRoutes</strong></div>
-            <div>Paradas Conservadas: <strong style="color: var(--accent-blue);">@dbHealth.TotalStops</strong></div>
-            <div>Logs de Odómetro: <strong style="color: var(--accent-green);">@dbHealth.TotalOdometerLogs</strong></div>
-            <div>Conexión Remota: <strong style="color: #4ade80;">Habilitada con credenciales</strong></div>
+        <div>
+            <a asp-action="ExportCsv" class="btn-orion-primary" style="background: linear-gradient(135deg, #22c55e, #16a34a); padding: 0.75rem 1.25rem; font-size: 0.95rem;">
+                <i class="fa-solid fa-file-arrow-down"></i> Descargar Reporte Consolidado (.CSV)
+            </a>
         </div>
     </div>
-}
+</div>
 
-<!-- Fleet Monitoring Dashboard (HU09) -->
-<div class="glass-card" style="margin-bottom: 2.5rem; border: 1px solid rgba(255, 181, 0, 0.4);">
-    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 10px; color: var(--ups-gold);">
-        <i class="fa-solid fa-truck-fast"></i> Monitoreo en Vivo de Conductores en Ruta (HU09)
-    </h3>
+<!-- Fleet Monitoring Table (HU07 Criterio 2 & 3) -->
+<div class="glass-card" style="margin-bottom: 2.5rem; border: 1px solid rgba(255, 181, 0, 0.3);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--ups-gold);">
+            <i class="fa-solid fa-truck-fast"></i> Tabla Consolidada de Rutas y Odómetros del Día
+        </h3>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">
+            5 Conductores Piloto Monitoreados
+        </span>
+    </div>
 
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
                     <th style="padding: 12px;">Conductor</th>
-                    <th style="padding: 12px;">Vehículo ID</th>
+                    <th style="padding: 12px;">Vehículo</th>
                     <th style="padding: 12px;">Estado Jornada</th>
-                    <th style="padding: 12px;">Ruta Asignada</th>
-                    <th style="padding: 12px;">Progreso de Paradas</th>
-                    <th style="padding: 12px;">Avance %</th>
+                    <th style="padding: 12px;">Artículos Entregados</th>
+                    <th style="padding: 12px;">Odómetro Inicial</th>
+                    <th style="padding: 12px;">Odómetro Final</th>
+                    <th style="padding: 12px;">Distancia Real Recorrida</th>
+                    <th style="padding: 12px;">Ahorro Proyectado</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var driver in Model.DriverMonitoring)
                 {
+                    bool hasFinished = driver.FinalKm.HasValue && driver.InitialKm.HasValue;
+
                     <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
                         <td style="padding: 14px; font-weight: 700;">
                             <i class="fa-solid fa-user-circle" style="color: var(--ups-gold);"></i> @driver.DriverName
@@ -90,17 +74,30 @@
                                 <span class="status-badge status-delivered">Finalizado</span>
                             }
                         </td>
-                        <td style="padding: 14px; font-weight: 600;">@driver.RouteName</td>
                         <td style="padding: 14px;">
-                            <strong style="color: #fff;">@driver.CompletedStops</strong> / @driver.TotalStops paradas
+                            <strong style="color: #fff;">@driver.CompletedStops</strong> / @driver.TotalStops artículos
+                            <div style="font-size: 0.75rem; color: var(--accent-green);">(@driver.ProgressPercentage% completado)</div>
                         </td>
-                        <td style="padding: 14px; width: 200px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
-                                    <div style="width: @driver.ProgressPercentage%; height: 100%; background: linear-gradient(90deg, var(--ups-gold), var(--accent-green)); border-radius: 10px; transition: width 0.4s ease;"></div>
-                                </div>
-                                <span style="font-weight: 700; font-size: 0.85rem; color: var(--ups-gold);">@driver.ProgressPercentage%</span>
-                            </div>
+                        <td style="padding: 14px; font-weight: 700; color: #cbd5e1;">
+                            @(driver.InitialKm.HasValue ? $"{driver.InitialKm.Value:N0} km" : "-")
+                        </td>
+                        <td style="padding: 14px; font-weight: 700; color: #cbd5e1;">
+                            @(driver.FinalKm.HasValue ? $"{driver.FinalKm.Value:N0} km" : "-")
+                        </td>
+                        <td style="padding: 14px; font-weight: 800; font-size: 1.05rem; color: var(--accent-blue);">
+                            @(hasFinished ? $"{driver.NetDistanceKm:N1} KM" : (driver.NetDistanceKm > 0 ? $"{driver.NetDistanceKm:N1} KM (Est.)" : "-"))
+                        </td>
+                        <td style="padding: 14px;">
+                            @if (driver.SavedKm > 0)
+                            {
+                                <span class="status-badge status-delivered">
+                                    <i class="fa-solid fa-arrow-down"></i> @driver.SavedKm.ToString("N1") km (@driver.SavingsPercentage%)
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">En progreso</span>
+                            }
                         </td>
                     </tr>
                 }
@@ -109,47 +106,47 @@
     </div>
 </div>
 
-<!-- KPI Cards -->
+<!-- KPI Summary Cards -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
     
     <div class="glass-card">
         <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
-            KM Histórico Manual
+            KM Histórico Línea Base
         </div>
         <div style="font-size: 1.8rem; font-weight: 800; color: #cbd5e1; margin-top: 4px;">
             @Model.TotalHistoricalKm.ToString("N1") KM
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Base de comparación</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Distancia sin ordenamiento</div>
     </div>
 
     <div class="glass-card">
         <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
-            KM Real Recorrido (ORION)
+            KM Real Neta (ORION)
         </div>
         <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-blue); margin-top: 4px;">
             @Model.TotalRealKm.ToString("N1") KM
         </div>
-        <div style="font-size: 0.8rem; color: var(--accent-blue); margin-top: 4px;">Odómetro Conductor</div>
+        <div style="font-size: 0.8rem; color: var(--accent-blue); margin-top: 4px;">Resta Odómetros (HU06)</div>
     </div>
 
     <div class="glass-card">
         <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
-            Kilómetros Ahorrados
+            Kilómetros Reducidos
         </div>
         <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-green); margin-top: 4px;">
             @Model.TotalSavedKm.ToString("N1") KM
         </div>
-        <div style="font-size: 0.8rem; color: var(--accent-green); margin-top: 4px;">~@Model.EstimatedFuelSavedLiters Litros de Combustible</div>
+        <div style="font-size: 0.8rem; color: var(--accent-green); margin-top: 4px;">~@Model.EstimatedFuelSavedLiters Litros de Gasolina Ahorrados</div>
     </div>
 
     <div class="glass-card">
         <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
-            % Ahorro Estimado
+            % Reducción Alcanzada
         </div>
         <div style="font-size: 1.8rem; font-weight: 800; color: var(--ups-gold); margin-top: 4px;">
             <i class="fa-solid fa-leaf"></i> @Model.TotalFuelSavingsPercentage%
         </div>
-        <div style="font-size: 0.8rem; color: var(--ups-gold); margin-top: 4px;">Eficiencia Algorítmica</div>
+        <div style="font-size: 0.8rem; color: var(--ups-gold); margin-top: 4px;">Meta Piloto: 8% a 10%</div>
     </div>
 
 </div>
@@ -157,7 +154,7 @@
 <!-- Chart.js Bar Chart -->
 <div class="glass-card" style="margin-bottom: 2.5rem;">
     <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
-        <i class="fa-solid fa-chart-column" style="color: var(--ups-gold);"></i> Gráfico Comparativo: Histórico Manual vs Recorrido Algorítmico ORION
+        <i class="fa-solid fa-chart-column" style="color: var(--ups-gold);"></i> Comparativa de Distancias: Rutas Históricas vs Algoritmo ORION
     </h3>
 
     <div style="position: relative; height: 320px; width: 100%;">
@@ -171,7 +168,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const ctx = document.getElementById('savingsChart').getContext('2d');
 
-            const labels = [@Html.Raw(string.Join(",", Model.Routes.Select(r => $"\"Ruta #{r.Id}\"")))];
+            const labels = [@Html.Raw(string.Join(",", Model.Routes.Select(r => $"\"Ruta #{r.Id} ({r.Driver?.Name ?? "Conductor"})\"")))];
             const historicalData = [@string.Join(",", Model.Routes.Select(r => r.BaselineDistanceKm.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)))];
             const realData = [@string.Join(",", Model.Routes.Select(r => {
                 double realKm = r.InitialKm.HasValue && r.FinalKm.HasValue ? (r.FinalKm.Value - r.InitialKm.Value) : (r.TotalDistanceKm > 0 ? r.TotalDistanceKm : r.Stops.Count * 3.2);
@@ -184,7 +181,7 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'KM Promedio Histórico Manual',
+                            label: 'Distancia Histórica Estimada (km)',
                             data: historicalData,
                             backgroundColor: 'rgba(148, 163, 184, 0.5)',
                             borderColor: '#94a3b8',
@@ -192,7 +189,7 @@
                             borderRadius: 6
                         },
                         {
-                            label: 'KM Real Recorrido (Algoritmo ORION)',
+                            label: 'Distancia Real Recorrida ORION (km)',
                             data: realData,
                             backgroundColor: 'rgba(255, 181, 0, 0.8)',
                             borderColor: '#FFB500',

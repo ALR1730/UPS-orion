@@ -18,7 +18,7 @@ namespace OrionMVP.Services
             _db = db;
         }
 
-        public async Task<OptimizationResultDto> OptimizeRouteAsync(int routeId, double startLat = -34.6037, double startLng = -58.3816)
+        public async Task<OptimizationResultDto> OptimizeRouteAsync(int routeId, double startLat = 18.4861, double startLng = -69.9312)
         {
             var stopwatch = Stopwatch.StartNew();
             var result = new OptimizationResultDto();
@@ -31,7 +31,7 @@ namespace OrionMVP.Services
             {
                 stopwatch.Stop();
                 result.IsSuccess = false;
-                result.Message = "La ruta especificada no existe o no tiene paradas cargadas.";
+                result.Message = "La ruta no contiene artículos o no existe.";
                 return result;
             }
 
@@ -45,7 +45,6 @@ namespace OrionMVP.Services
             int order = 1;
             while (unvisited.Count > 0)
             {
-                // Find nearest unvisited stop using Haversine metric
                 RouteStop nearest = unvisited[0];
                 double minDistance = CalculateHaversineDistance(currentLat, currentLng, nearest.Latitude, nearest.Longitude);
 
@@ -61,14 +60,14 @@ namespace OrionMVP.Services
 
                 totalDistance += minDistance;
                 nearest.SequenceOrder = order++;
+                nearest.Sequence = nearest.SequenceOrder;
                 optimizedSequence.Add(nearest);
 
-                currentLat = nearest.Latitude;
-                currentLng = nearest.Longitude;
+                currentLat = nearest.Latitude != 0 ? nearest.Latitude : currentLat;
+                currentLng = nearest.Longitude != 0 ? nearest.Longitude : currentLng;
                 unvisited.Remove(nearest);
             }
 
-            // Update route stats in DB
             route.TotalDistanceKm = Math.Round(totalDistance, 2);
             await _db.SaveChangesAsync();
 
@@ -79,14 +78,15 @@ namespace OrionMVP.Services
             result.ExecutionTimeMs = stopwatch.ElapsedMilliseconds;
             result.ProcessedStopsCount = optimizedSequence.Count;
             result.OptimizedStops = optimizedSequence;
-            result.Message = $"Secuencia optimizada con éxito para {optimizedSequence.Count} paradas en {stopwatch.ElapsedMilliseconds} ms. Distancia total: {route.TotalDistanceKm} km.";
+            result.Message = $"Secuenciador ORION: {optimizedSequence.Count} paradas ordenadas por cercanía lineal en {stopwatch.ElapsedMilliseconds} ms (Distancia estimada: {route.TotalDistanceKm} km).";
 
             return result;
         }
 
         public static double CalculateHaversineDistance(double lat1, double lon1, double lat2, double lon2)
         {
-            const double R = 6371.0; // Earth radius in kilometers
+            if (lat1 == 0 && lon1 == 0 || lat2 == 0 && lon2 == 0) return 1.5; // Distancia estimada de fallback
+            const double R = 6371.0; // Radio de la tierra en KM
             double dLat = ToRadians(lat2 - lat1);
             double dLon = ToRadians(lon2 - lon1);
 

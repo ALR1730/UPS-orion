@@ -18,18 +18,15 @@ namespace OrionMVP.Controllers
     {
         private readonly OrionDbContext _db;
         private readonly IAddressImportService _importService;
-        private readonly IGeocodingService _geocodingService;
         private readonly IRouteOptimizerService _optimizerService;
 
         public DispatchController(
             OrionDbContext db, 
             IAddressImportService importService, 
-            IGeocodingService geocodingService,
             IRouteOptimizerService optimizerService)
         {
             _db = db;
             _importService = importService;
-            _geocodingService = geocodingService;
             _optimizerService = optimizerService;
         }
 
@@ -63,11 +60,11 @@ namespace OrionMVP.Controllers
             var driver = await _db.Drivers.FirstOrDefaultAsync(d => d.Id == (driverId ?? 1));
             var newRoute = new Route
             {
-                Name = $"Ruta {DateTime.Now:yyyy-MM-dd HH:mm} - {result.TotalRead} paradas",
+                Name = $"Ruta Piloto - {result.TotalRead} artículos ({DateTime.Now:dd/MM/yyyy HH:mm})",
                 Date = DateTime.UtcNow,
                 DriverId = driver?.Id ?? 1,
                 Status = "No iniciado",
-                BaselineDistanceKm = Math.Round(result.TotalRead * 4.2, 1),
+                BaselineDistanceKm = Math.Round(result.TotalRead * 3.8, 1),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -76,24 +73,27 @@ namespace OrionMVP.Controllers
             {
                 newRoute.Stops.Add(new RouteStop
                 {
+                    ArticleName = rec.ArticleName,
                     CustomerName = rec.CustomerName,
-                    Street = rec.Street,
-                    Number = rec.Number,
-                    City = rec.City,
+                    Address = rec.Address,
+                    Street = rec.Address,
+                    Latitude = rec.Latitude,
+                    Longitude = rec.Longitude,
                     SequenceOrder = order++,
+                    Sequence = order - 1,
                     Status = "Pendiente",
-                    IsGeocoded = false
+                    IsGeocoded = true,
+                    ExternalNavUrl = $"https://www.google.com/maps/search/?api=1&query={rec.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)},{rec.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}"
                 });
             }
 
             _db.Routes.Add(newRoute);
             await _db.SaveChangesAsync();
 
-            // Auto geocode and auto optimize sequence
-            await InternalGeocodeRouteStops(newRoute.Id);
+            // Execute Linear Proximity Optimization (HU03)
             var optResult = await _optimizerService.OptimizeRouteAsync(newRoute.Id);
 
-            TempData["SuccessMessage"] = $"¡Éxito! Se cargaron {result.TotalRead} direcciones. {optResult.Message}";
+            TempData["SuccessMessage"] = $"¡Carga masiva exitosa! Se registraron {result.TotalRead} artículos. {optResult.Message}";
             return RedirectToAction("RouteDetails", new { id = newRoute.Id });
         }
 
@@ -114,21 +114,12 @@ namespace OrionMVP.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GeocodeRoute(int routeId)
-        {
-            await InternalGeocodeRouteStops(routeId);
-            var optResult = await _optimizerService.OptimizeRouteAsync(routeId);
-            TempData["SuccessMessage"] = $"Paradas re-geocodificadas y secuencia optimizada en {optResult.ExecutionTimeMs} ms.";
-            return RedirectToAction("RouteDetails", new { id = routeId });
-        }
-
-        [HttpPost]
         public async Task<IActionResult> OptimizeSequence(int routeId)
         {
             var optResult = await _optimizerService.OptimizeRouteAsync(routeId);
             if (optResult.IsSuccess)
             {
-                TempData["SuccessMessage"] = $"Algoritmo Secuenciador ORION: {optResult.Message}";
+                TempData["SuccessMessage"] = optResult.Message;
                 TempData["BenchmarkTime"] = $"{optResult.ExecutionTimeMs} ms";
             }
             else
@@ -139,84 +130,33 @@ namespace OrionMVP.Controllers
             return RedirectToAction("RouteDetails", new { id = routeId });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateStopAddress(int stopId, string street, string number, string city)
-        {
-            var stop = await _db.RouteStops.FindAsync(stopId);
-            if (stop == null)
-            {
-                return NotFound();
-            }
-
-            stop.Street = street;
-            stop.Number = number;
-            stop.City = city;
-
-            var geoResult = await _geocodingService.GeocodeAddressAsync(street, number, city);
-            if (geoResult.IsSuccess)
-            {
-                stop.Latitude = geoResult.Latitude;
-                stop.Longitude = geoResult.Longitude;
-                stop.IsGeocoded = true;
-                stop.HasGeocodingError = false;
-                stop.ExternalNavUrl = $"https://www.google.com/maps/search/?api=1&query={geoResult.Latitude},{geoResult.Longitude}";
-            }
-            else
-            {
-                stop.IsGeocoded = false;
-                stop.HasGeocodingError = true;
-            }
-
-            await _db.SaveChangesAsync();
-
-            // Re-optimize sequence after address change
-            await _optimizerService.OptimizeRouteAsync(stop.RouteId);
-
-            TempData["SuccessMessage"] = $"Dirección de la parada actualizada, re-geocodificada y secuencia recalculada.";
-            return RedirectToAction("RouteDetails", new { id = stop.RouteId });
-        }
-
         [HttpGet]
         public IActionResult DownloadSampleCsv()
         {
-            var csv = "Calle,Altura,Ciudad,Cliente\n" +
-                      "Av. Corrientes,1234,Buenos Aires,Juan Perez\n" +
-                      "Calle Erronea Invalida,999,Desconocido,Cliente Con Error\n" +
-                      "Av. Santa Fe,2500,Buenos Aires,Maria Gomez\n" +
-                      "Calle Florida,450,Buenos Aires,Tech Corp\n" +
-                      "Av. Cabildo,3000,Buenos Aires,Distribuidora Sur\n" +
-                      "Av. Rivadavia,5400,Buenos Aires,Lucia Fernandez\n";
+            var csv = "Articulo,Cliente,Direccion,Latitud,Longitud\r\n" +
+                      "Paquete Electrónica 3kg,Juan Pérez,Av. Winston Churchill 1099,18.4712,-69.9405\r\n" +
+                      "Caja Documentos Legales,María Gómez,Av. 27 de Febrero 450,18.4764,-69.9281\r\n" +
+                      "Monitor LED 27 pulg,Tech Solutions SRL,Av. John F. Kennedy 800,18.4893,-69.9356\r\n" +
+                      "Suministros Médicos,Farmacia Central,Av. Abraham Lincoln 702,18.4735,-69.9324\r\n" +
+                      "Ropa y Calzado Deportivo,Carlos Mendoza,Calle El Conde 310,18.4731,-69.8864\r\n" +
+                      "Herramientas Eléctricas,Ferretería El Progreso,Av. San Vicente de Paúl 12,18.5023,-69.8512\r\n" +
+                      "Componentes de Red,DataNet Dominicana,Av. Lope de Vega 29,18.4751,-69.9348\r\n" +
+                      "Repuestos Automotrices,Taller Rodríguez,Av. Máximo Gómez 144,18.4811,-69.9123\r\n" +
+                      "Libros Universitarios,Librería Cuesta,Av. 27 de Febrero esq. Lincoln,18.4758,-69.9311\r\n" +
+                      "Insumos de Impresión,Imprenta Moderna,Calle Roberto Pastoriza 214,18.4729,-69.9362\r\n" +
+                      "Electrodomésticos Pequeños,Distribuidora Corripio,Av. John F. Kennedy km 6.5,18.4912,-69.9451\r\n" +
+                      "Cosméticos y Cuidado,Salón Belleza VIP,Av. Sarasota 45,18.4552,-69.9482\r\n" +
+                      "Muestras de Laboratorio,Laboratorio Referencia,Av. Luperón 100,18.4612,-69.9721\r\n" +
+                      "Alimentos No Perecederos,Supermercado Bravo,Av. Enriquillo 88,18.4489,-69.9615\r\n" +
+                      "Artículos de Oficina,Oficinas Corporativas Torre Piantini,Av. Gustavo Mejía Ricart 102,18.4745,-69.9388\r\n";
 
-            var bytes = Encoding.UTF8.GetBytes(csv);
-            return File(bytes, "text/csv", "Plantilla_Direcciones_UPS.csv");
-        }
+            var preamble = Encoding.UTF8.GetPreamble();
+            var contentBytes = Encoding.UTF8.GetBytes(csv);
+            var bytes = new byte[preamble.Length + contentBytes.Length];
+            Buffer.BlockCopy(preamble, 0, bytes, 0, preamble.Length);
+            Buffer.BlockCopy(contentBytes, 0, bytes, preamble.Length, contentBytes.Length);
 
-        private async Task<int> InternalGeocodeRouteStops(int routeId)
-        {
-            var stops = await _db.RouteStops.Where(s => s.RouteId == routeId).ToListAsync();
-            int count = 0;
-
-            foreach (var stop in stops)
-            {
-                var geoResult = await _geocodingService.GeocodeAddressAsync(stop.Street, stop.Number, stop.City);
-                if (geoResult.IsSuccess)
-                {
-                    stop.Latitude = geoResult.Latitude;
-                    stop.Longitude = geoResult.Longitude;
-                    stop.IsGeocoded = true;
-                    stop.HasGeocodingError = false;
-                    stop.ExternalNavUrl = $"https://www.google.com/maps/search/?api=1&query={geoResult.Latitude},{geoResult.Longitude}";
-                }
-                else
-                {
-                    stop.IsGeocoded = false;
-                    stop.HasGeocodingError = true;
-                }
-                count++;
-            }
-
-            await _db.SaveChangesAsync();
-            return count;
+            return File(bytes, "text/csv; charset=utf-8", "Plantilla_Articulos_ORION_15_Paradas.csv");
         }
     }
 }

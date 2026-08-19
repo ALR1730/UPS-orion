@@ -29,6 +29,7 @@ namespace OrionMVP.Controllers
 
             ViewBag.Drivers = await _db.Drivers.ToListAsync();
             ViewBag.SelectedDriverId = selectedDriverId;
+            ViewBag.CurrentDriver = driver;
 
             Route? activeRoute = null;
             if (routeId.HasValue)
@@ -58,89 +59,36 @@ namespace OrionMVP.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveOdometer(int routeId, int initialKm, int finalKm)
+        public async Task<IActionResult> StartRoute(int routeId, int initialKm)
         {
-            if (initialKm <= 0 || finalKm <= 0)
+            if (initialKm <= 0)
             {
-                TempData["ErrorMessage"] = "Los kilómetros inicial y final deben ser números enteros positivos mayores a cero.";
-                return RedirectToAction("Index", new { routeId });
-            }
-
-            if (finalKm < initialKm)
-            {
-                TempData["ErrorMessage"] = "El KM Final debe ser mayor o igual al KM Inicial.";
+                TempData["ErrorMessage"] = "El kilometraje inicial debe ser un número positivo mayor a cero.";
                 return RedirectToAction("Index", new { routeId });
             }
 
             var route = await _db.Routes.FirstOrDefaultAsync(r => r.Id == routeId);
-            if (route == null)
-            {
-                return NotFound();
-            }
+            if (route == null) return NotFound();
 
             route.InitialKm = initialKm;
-            route.FinalKm = finalKm;
-            route.Status = "Finalizado";
-
-            var log = new OdometerLog
-            {
-                RouteId = route.Id,
-                DriverId = route.DriverId,
-                InitialKm = initialKm,
-                FinalKm = finalKm,
-                Timestamp = DateTime.UtcNow
-            };
-
-            _db.OdometerLogs.Add(log);
+            route.Status = "En Ruta";
 
             var driver = await _db.Drivers.FindAsync(route.DriverId);
             if (driver != null)
             {
-                driver.Status = "Finalizado";
+                driver.Status = "En Ruta";
             }
 
             await _db.SaveChangesAsync();
-
-            int realKm = finalKm - initialKm;
-            TempData["SuccessMessage"] = $"Odómetro registrado con éxito. Distancia real recorrida: {realKm} KM.";
-            return RedirectToAction("Index", new { routeId });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CancelStop(int stopId, string reason)
-        {
-            var stop = await _db.RouteStops.FindAsync(stopId);
-            if (stop == null)
-            {
-                return NotFound();
-            }
-
-            stop.Status = "No entregado";
-            stop.CancellationReason = string.IsNullOrWhiteSpace(reason) ? "Cliente ausente" : reason;
-
-            // Ensure route status is set to En Ruta
-            var route = await _db.Routes.FindAsync(stop.RouteId);
-            if (route != null && route.Status == "No iniciado")
-            {
-                route.Status = "En Ruta";
-                var driver = await _db.Drivers.FindAsync(route.DriverId);
-                if (driver != null) driver.Status = "En Ruta";
-            }
-
-            await _db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = $"Parada #{stop.SequenceOrder} marcada como 'No entregada' (Motivo: {stop.CancellationReason}). Se ha desbloqueado la siguiente entrega.";
-            return RedirectToAction("Index", new { routeId = stop.RouteId });
+            TempData["SuccessMessage"] = $"¡Jornada iniciada! Odómetro inicial registrado: {initialKm} km. Hoja de ruta desbloqueada.";
+            return RedirectToAction("Index", new { driverId = route.DriverId, routeId });
         }
 
         [HttpPost]
         public async Task<IActionResult> MarkDelivered(int stopId)
         {
             var stop = await _db.RouteStops.FindAsync(stopId);
-            if (stop == null)
-            {
-                return NotFound();
-            }
+            if (stop == null) return NotFound();
 
             stop.Status = "Entregado";
             stop.CancellationReason = null;
@@ -154,9 +102,47 @@ namespace OrionMVP.Controllers
             }
 
             await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = $"Parada #{stop.SequenceOrder} marcada como Entregada.";
+            return RedirectToAction("Index", new { driverId = route?.DriverId, routeId = stop.RouteId });
+        }
 
-            TempData["SuccessMessage"] = $"¡Excelente! Parada #{stop.SequenceOrder} marcada como Entregada.";
-            return RedirectToAction("Index", new { routeId = stop.RouteId });
+        [HttpPost]
+        public async Task<IActionResult> CompleteRoute(int routeId, int finalKm)
+        {
+            var route = await _db.Routes.Include(r => r.Stops).FirstOrDefaultAsync(r => r.Id == routeId);
+            if (route == null) return NotFound();
+
+            int initialKm = route.InitialKm ?? 0;
+
+            if (finalKm < initialKm)
+            {
+                TempData["ErrorMessage"] = $"El kilometraje final ({finalKm} km) debe ser mayor o igual al kilometraje inicial ({initialKm} km).";
+                return RedirectToAction("Index", new { driverId = route.DriverId, routeId });
+            }
+
+            route.FinalKm = finalKm;
+            route.TotalDistanceKm = finalKm - initialKm;
+            route.Status = "Finalizado";
+
+            var driver = await _db.Drivers.FindAsync(route.DriverId);
+            if (driver != null)
+            {
+                driver.Status = "Finalizado";
+            }
+
+            var log = new OdometerLog
+            {
+                RouteId = route.Id,
+                DriverId = route.DriverId,
+                InitialKm = initialKm,
+                FinalKm = finalKm,
+                Timestamp = DateTime.UtcNow
+            };
+            _db.OdometerLogs.Add(log);
+
+            await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = $"¡Jornada completada con éxito! Distancia total real recorrida: {route.TotalDistanceKm} km.";
+            return RedirectToAction("Index", new { driverId = route.DriverId, routeId });
         }
     }
 }

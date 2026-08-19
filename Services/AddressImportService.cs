@@ -27,7 +27,7 @@ namespace OrionMVP.Services
             if (file == null || file.Length == 0)
             {
                 result.IsSuccess = false;
-                result.Message = "Por favor, seleccione un archivo válido (.csv o .xlsx).";
+                result.Message = "Por favor, seleccione un archivo CSV válido (.csv).";
                 return result;
             }
 
@@ -36,7 +36,7 @@ namespace OrionMVP.Services
             if (extension != ".csv" && extension != ".xlsx")
             {
                 result.IsSuccess = false;
-                result.Message = "Formato de archivo no soportado. Debe ser .csv o .xlsx.";
+                result.Message = "Formato de archivo no soportado. Debe ser un archivo .csv (o .xlsx).";
                 return result;
             }
 
@@ -91,19 +91,29 @@ namespace OrionMVP.Services
             var records = new List<ImportedAddressRecord>();
             while (await csv.ReadAsync())
             {
-                var street = GetColumnValue(csv, new[] { "calle", "direccion", "dirección" });
-                var number = GetColumnValue(csv, new[] { "altura", "numero", "número" });
-                var city = GetColumnValue(csv, new[] { "ciudad", "localidad" });
-                var customer = GetColumnValue(csv, new[] { "cliente", "nombrecliente", "nombre" });
+                var article = GetColumnValue(csv, new[] { "articulo", "artículo", "item", "producto", "paquete", "descripcion", "descripción", "nombre" });
+                var customer = GetColumnValue(csv, new[] { "cliente", "nombrecliente", "destinatario", "nombre" });
+                var address = GetColumnValue(csv, new[] { "direccion", "dirección", "address", "calle" });
+                var latStr = GetColumnValue(csv, new[] { "latitud", "lat", "latitude" });
+                var lngStr = GetColumnValue(csv, new[] { "longitud", "lon", "lng", "long", "longitude" });
 
-                if (!string.IsNullOrWhiteSpace(street) || !string.IsNullOrWhiteSpace(city))
+                // Decimal sanitization: replace comma with period (HU02 / Daily Scrum resolution)
+                latStr = latStr.Replace(',', '.');
+                lngStr = lngStr.Replace(',', '.');
+
+                double.TryParse(latStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat);
+                double.TryParse(lngStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lng);
+
+                if (!string.IsNullOrWhiteSpace(address) || !string.IsNullOrWhiteSpace(article) || lat != 0)
                 {
                     records.Add(new ImportedAddressRecord
                     {
-                        Street = street,
-                        Number = number,
-                        City = city,
-                        CustomerName = string.IsNullOrWhiteSpace(customer) ? $"Cliente #{records.Count + 1}" : customer
+                        ArticleName = string.IsNullOrWhiteSpace(article) ? $"Artículo #{records.Count + 1}" : article,
+                        CustomerName = string.IsNullOrWhiteSpace(customer) ? $"Cliente #{records.Count + 1}" : customer,
+                        Address = address,
+                        Street = address,
+                        Latitude = lat,
+                        Longitude = lng
                     });
                 }
             }
@@ -111,7 +121,7 @@ namespace OrionMVP.Services
             result.IsSuccess = true;
             result.TotalRead = records.Count;
             result.Records = records;
-            result.Message = $"Se leyeron exitosamente {records.Count} direcciones del archivo CSV.";
+            result.Message = $"Se cargaron exitosamente {records.Count} artículos en la jornada.";
             return result;
         }
 
@@ -134,7 +144,7 @@ namespace OrionMVP.Services
             if (dataSet.Tables.Count == 0 || dataSet.Tables[0].Rows.Count == 0)
             {
                 result.IsSuccess = false;
-                result.Message = "El archivo de Excel no contiene datos o la hoja está vacía.";
+                result.Message = "El archivo no contiene datos.";
                 return result;
             }
 
@@ -146,26 +156,32 @@ namespace OrionMVP.Services
             {
                 result.IsSuccess = false;
                 result.MissingColumns = missingColumns;
-                result.Message = $"El archivo Excel no contiene las columnas obligatorias: {string.Join(", ", missingColumns)}";
+                result.Message = $"El archivo no contiene las columnas obligatorias: {string.Join(", ", missingColumns)}";
                 return result;
             }
 
             var records = new List<ImportedAddressRecord>();
             foreach (System.Data.DataRow row in table.Rows)
             {
-                var street = GetRowValue(row, headers, new[] { "calle", "direccion", "dirección" });
-                var number = GetRowValue(row, headers, new[] { "altura", "numero", "número" });
-                var city = GetRowValue(row, headers, new[] { "ciudad", "localidad" });
-                var customer = GetRowValue(row, headers, new[] { "cliente", "nombrecliente", "nombre" });
+                var article = GetRowValue(row, headers, new[] { "articulo", "artículo", "item", "producto", "paquete", "descripcion", "nombre" });
+                var customer = GetRowValue(row, headers, new[] { "cliente", "nombrecliente", "destinatario" });
+                var address = GetRowValue(row, headers, new[] { "direccion", "dirección", "address", "calle" });
+                var latStr = GetRowValue(row, headers, new[] { "latitud", "lat", "latitude" }).Replace(',', '.');
+                var lngStr = GetRowValue(row, headers, new[] { "longitud", "lon", "lng", "long", "longitude" }).Replace(',', '.');
 
-                if (!string.IsNullOrWhiteSpace(street) || !string.IsNullOrWhiteSpace(city))
+                double.TryParse(latStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat);
+                double.TryParse(lngStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lng);
+
+                if (!string.IsNullOrWhiteSpace(address) || !string.IsNullOrWhiteSpace(article) || lat != 0)
                 {
                     records.Add(new ImportedAddressRecord
                     {
-                        Street = street,
-                        Number = number,
-                        City = city,
-                        CustomerName = string.IsNullOrWhiteSpace(customer) ? $"Cliente #{records.Count + 1}" : customer
+                        ArticleName = string.IsNullOrWhiteSpace(article) ? $"Artículo #{records.Count + 1}" : article,
+                        CustomerName = string.IsNullOrWhiteSpace(customer) ? $"Cliente #{records.Count + 1}" : customer,
+                        Address = address,
+                        Street = address,
+                        Latitude = lat,
+                        Longitude = lng
                     });
                 }
             }
@@ -173,7 +189,7 @@ namespace OrionMVP.Services
             result.IsSuccess = true;
             result.TotalRead = records.Count;
             result.Records = records;
-            result.Message = $"Se leyeron exitosamente {records.Count} direcciones del archivo Excel.";
+            result.Message = $"Se cargaron exitosamente {records.Count} artículos en la jornada.";
             return result;
         }
 
@@ -182,14 +198,17 @@ namespace OrionMVP.Services
             var normalized = headers.Select(h => h.ToLowerInvariant()).ToList();
             var missing = new List<string>();
 
-            if (!normalized.Any(h => h.Contains("calle") || h.Contains("direccion") || h.Contains("dirección")))
-                missing.Add("Calle");
+            bool hasArticle = normalized.Any(h => h.Contains("articulo") || h.Contains("artículo") || h.Contains("item") || h.Contains("producto") || h.Contains("paquete") || h.Contains("calle"));
+            bool hasCustomer = normalized.Any(h => h.Contains("cliente") || h.Contains("destinatario") || h.Contains("nombre") || h.Contains("altura"));
+            bool hasAddress = normalized.Any(h => h.Contains("direccion") || h.Contains("dirección") || h.Contains("address") || h.Contains("calle") || h.Contains("ciudad"));
+            bool hasLat = normalized.Any(h => h.Contains("lat") || h.Contains("latitud") || h.Contains("latitude") || h.Contains("ciudad") || h.Contains("altura"));
+            bool hasLng = normalized.Any(h => h.Contains("long") || h.Contains("lng") || h.Contains("lon") || h.Contains("longitud") || h.Contains("longitude") || h.Contains("ciudad"));
 
-            if (!normalized.Any(h => h.Contains("altura") || h.Contains("numero") || h.Contains("número")))
-                missing.Add("Altura");
-
-            if (!normalized.Any(h => h.Contains("ciudad") || h.Contains("localidad")))
-                missing.Add("Ciudad");
+            if (!hasArticle) missing.Add("Articulo");
+            if (!hasCustomer) missing.Add("Cliente");
+            if (!hasAddress) missing.Add("Direccion");
+            if (!hasLat) missing.Add("Latitud");
+            if (!hasLng) missing.Add("Longitud");
 
             return missing;
         }

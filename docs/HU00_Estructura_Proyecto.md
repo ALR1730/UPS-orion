@@ -1,54 +1,69 @@
-# Documentación HU00: Estructura del Proyecto y Configuración Base
+# Documentación HU00: Estructura del Proyecto, Scrum Team y Configuración Base
 
-## 📌 Descripción de la Historia 0
-Como **Desarrollador / Arquitecto**, se establece la infraestructura base en C# (.NET 10 ASP.NET Core MVC) para el sistema MVP **UPS ORION**, incluyendo la configuración del motor de base de datos relacional ligero (Entity Framework Core con SQLite), el sistema de diseño visual responsive (UPS ORION Glassmorphism UI) y la navegación unificada por roles.
+## 📋 Información General del Proyecto y Scrum Framework
 
----
-
-## 🛠️ Modificaciones y Cambios Realizados
-
-1. **Inicialización de Proyecto C#**:
-   - Creación de la solución `OrionMVP` utilizando `.NET 10.0 SDK`.
-   - Incorporación de paquetes NuGet:
-     - `Microsoft.EntityFrameworkCore.Sqlite`
-     - `Microsoft.EntityFrameworkCore.Design`
-     - `CsvHelper`
-
-2. **Modelos del Dominio de Datos**:
-   - `Driver.cs`: Entidad para conductores y estado de su jornada (`No iniciado`, `En Ruta`, `Finalizado`).
-   - `Route.cs`: Entidad de rutas con métricas de odómetro (`InitialKm`, `FinalKm`, `TotalDistanceKm`, `BaselineDistanceKm`).
-   - `RouteStop.cs`: Entidad de paradas con secuencia 1..N, geocodificación (`Latitude`, `Longitude`, `IsGeocoded`, `HasGeocodingError`) y estado (`Pendiente`, `Entregado`, `No entregado`).
-   - `OdometerLog.cs`: Registro auditado de odómetros.
-   - `HistoricalRoute.cs`: Base de comparación histórica para ahorro de combustible.
-
-3. **Configuración de Persistencia (EF Core)**:
-   - `OrionDbContext.cs`: Definición de `DbSet` para las 5 entidades principales y sembrado (*seed data*) inicial de conductores y rutas históricas para pruebas.
-   - Conexión configurada en `Program.cs` con base de datos SQLite `orion.db` generada automáticamente al iniciar la app (`EnsureCreated()`).
-
-4. **Interfaz Visual y Navegación**:
-   - Sistema de diseño visual con paleta oficial de UPS (Oro `#FFB500`, Oscuro Obsidiana, Acentos Neón).
-   - Layout responsive `_Layout.cshtml` con navegación a los 3 módulos:
-     - **Despacho** (`/Dispatch`) -> HU01 - HU03.
-     - **Conductor** (`/Driver`) -> HU04 - HU06, HU10.
-     - **Supervisor** (`/Supervisor`) -> HU07, HU08, HU09.
+* **Proyecto:** ORION MVP (Optimized Routing for Integration and Operational Navigation)
+* **Objetivo del Producto (Product Goal):** "Habilitar una plataforma digital centralizada y ligera que permita validar, en un entorno piloto controlado de 5 conductores y 1 zona urbana durante 6-8 semanas, si el ordenamiento automatizado de paradas reduce entre un 8% y 10% los kilómetros recorridos antes de proceder con inversiones de infraestructura a gran escala."
+* **Herramienta de Gestión:** [Tablero Jira ORION - ITLA](https://itla-adm.atlassian.net/jira/software/projects/SCRUM/boards/1)
+* **Sprint Goal:** "Habilitar la infraestructura de datos base que permita registrar artículos y direcciones masivamente mediante un CSV, calcular una secuencia optimizada de paradas por proximidad lineal, y desplegar la hoja de ruta responsive para que los conductores gestionen sus entregas apoyados en Google Maps externo, consolidando las métricas de kilometraje en un reporte final para el supervisor."
 
 ---
 
-## ✅ Criterios de Aceptación Cumplidos
+## 👥 Scrum Team y Asignaciones
 
-| Criterio | Estado | Comentario |
-|---|---|---|
-| Proyecto C# compilable sin errores | ✅ Cumplido | Verificado con `dotnet build`. |
-| Configuración de Base de Datos SQLite | ✅ Cumplido | Configurado con EF Core 10 y `EnsureCreated()`. |
-| Definición de Modelos del Dominio | ✅ Cumplido | `Driver`, `Route`, `RouteStop`, `OdometerLog`, `HistoricalRoute`. |
-| Interfaz base visual responsive | ✅ Cumplido | CSS custom, Glassmorphic UI y FontAwesome icons. |
-| Estructura lista para ramificación en Git | ✅ Cumplido | Documentación lista en `docs/HU00_Estructura_Proyecto.md`. |
+| Rol | Integrante | Correo Institucional | Responsabilidad Principal |
+|---|---|---|---|
+| **Product Owner (PO)** | Angel Luis Rosario | 20240079@itla.edu.do | Gestión del Product Backlog, validación de criterios de aceptación y alineación estratégica. |
+| **Scrum Master (SM)** | Juan Ectiversom Celedonio Solano | 20241562@itla.edu.do | Facilitación ágil, remoción de impedimentos técnicos y mantenimiento del flujo en Jira. |
+| **Developer** | Anthonny Brayhan Soriano Franco | 20242266@itla.edu.do | Arquitectura de datos, esquemas e inicialización de BD (HU01). |
+| **Developer** | Cesar Reyes | 20241308@itla.edu.do | Ingesta CSV, sanitización decimal y secuenciación lineal (HU02, HU03). |
+| **Developer** | Luis Manuel Ortega Mejia | 20221134@itlaedudo.onmicrosoft.com | Frontend móvil responsive para hojas de ruta del conductor (HU04). |
+| **Developer** | Angel Gabriel Morillo Rosario | 20230554@itla.edu.do | Integración externa por enlaces profundos a Google Maps (HU05). |
+| **Developer** | Jostin Wilmer Perez | 20221096@itlaedudo.onmicrosoft.com | Captura en campo y validación de odómetro inicial/final (HU06). |
+| **Developer** | Emil Hari Montilla Salvador | 20220287@itlaedudo.onmicrosoft.com | Frontend del panel de control consolidado del supervisor (HU07). |
+| **Developer** | Jhois Collado | 20211124@itla.edu.do | Backend analítico, cálculo de distancias y exportador CSV (HU07). |
+| **QA Engineer** | Josteen Mayobanex Del Orbe | 20240270@itla.edu.do | Aseguramiento de calidad, pruebas unitarias y validación de criterios. |
+| **QA Engineer** | Yassil Del Orbe | 20242536@itla.edu.do | Pruebas de integración, simulación de campo con 5 conductores piloto. |
 
 ---
 
-## 🔍 Instrucciones para Commit de Git
+## 🖼️ Evidencia del Tablero Activo en Jira
 
-```bash
-git add .
-git commit -m "HU00: Estructura del proyecto C# ASP.NET Core, EF Core SQLite y UI base"
+![Tablero Activo en Jira Software - Flujo de Trabajo Scrum](Screenshot%202026-08-19%20124257.png)
+
+---
+
+## 🗂️ Arquitectura de Épicas del Sprint 1 (Total: 14 Story Points)
+
+```mermaid
+graph TD
+    A[Proyecto ORION MVP] --> E1[SCRUM-41: Infraestructura de Datos e Ingesta]
+    A --> E2[SCRUM-42: Motor de Optimización y Secuenciación]
+    A --> E3[SCRUM-43: Interfaz Móvil y Operación Conductor]
+    A --> E4[SCRUM-44: Panel Administrativo y Analítica]
+
+    E1 --> HU01[HU01: Base de Datos e Inicialización - 2 SP]
+    E1 --> HU02[HU02: Carga Centralizada CSV - 2 SP]
+    E2 --> HU03[HU03: Secuenciador Cercanía Lineal - 2 SP]
+    E3 --> HU04[HU04: Vista Móvil Hoja de Ruta - 2 SP]
+    E3 --> HU05[HU05: Enlace GPS Google Maps - 1 SP]
+    E3 --> HU06[HU06: Cierre y Registro Odómetro - 2 SP]
+    E4 --> HU07[HU07: Panel Supervisor y Reporte CSV - 3 SP]
 ```
+
+---
+
+## 🛠️ Estructura Técnica de la Solución (C# .NET 10 ASP.NET Core MVC)
+
+1. **Backend y Capa de Datos**:
+   * ASP.NET Core MVC con Entity Framework Core SQLite (`OrionDbContext.cs`).
+   * Servicios inyectados para optimización (`NearestNeighborOptimizerService.cs`) e ingesta CSV (`AddressImportService.cs`).
+2. **Frontend UI/UX**:
+   * Sistema de diseño responsive con paleta temática UPS (Oro `#FFB500`, Obsidiana, Acentos Neón).
+   * Vistas especializadas por rol: Despacho (`/Dispatch`), Conductor (`/Driver`), Supervisor (`/Supervisor`).
+3. **Definition of Done (DoD)**:
+   * [x] El código compila limpiamente sin errores de sintaxis (`dotnet build`).
+   * [x] Formularios y campos interactivos cuentan con validaciones nativas.
+   * [x] Los datos persisten correctamente en la base de datos relacional.
+   * [x] Interfaz responsive validada en resoluciones móviles y de escritorio.
+   * [x] 100% de criterios de aceptación verificados.

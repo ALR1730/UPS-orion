@@ -1,31 +1,38 @@
 @model OrionMVP.Models.Route
 @{
-    ViewData["Title"] = "App Móvil Conductor - Cancelación de Parada (HU10)";
+    ViewData["Title"] = "App Móvil Conductor (HU04 - HU06)";
     var drivers = ViewBag.Drivers as List<OrionMVP.Models.Driver> ?? new List<OrionMVP.Models.Driver>();
     int selectedDriverId = ViewBag.SelectedDriverId ?? 1;
+    var currentDriver = ViewBag.CurrentDriver as OrionMVP.Models.Driver;
+    bool hasRoute = Model != null && Model.Stops.Any();
+    bool hasInitialKm = Model?.InitialKm.HasValue == true && Model.InitialKm.Value > 0;
+    int totalStops = Model?.Stops.Count ?? 0;
+    int deliveredStops = Model?.Stops.Count(s => s.Status == "Entregado") ?? 0;
+    bool allDelivered = totalStops > 0 && deliveredStops == totalStops;
+    bool isCompleted = Model?.Status == "Finalizado" && Model?.FinalKm.HasValue == true;
 }
 
-<div style="max-width: 540px; margin: 0 auto;">
+<div style="max-width: 580px; margin: 0 auto; padding-bottom: 2rem;">
     
-    <!-- Mobile Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+    <!-- Mobile Header & Driver Selector (HU04) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
         <div>
-            <span class="brand-badge"><i class="fa-solid fa-truck-ramp-box"></i> APP CONDUCTOR</span>
-            <h1 style="font-size: 1.6rem; font-weight: 800; margin-top: 4px;">Ruta Diaria de Entregas</h1>
+            <span class="brand-badge"><i class="fa-solid fa-mobile-screen-button"></i> APP CONDUCTOR PILOTO</span>
+            <h1 style="font-size: 1.6rem; font-weight: 800; margin-top: 4px;">Hoja de Ruta Diaria</h1>
         </div>
 
         <div>
             <form method="get" asp-action="Index">
-                <select name="driverId" onchange="this.form.submit()" style="padding: 6px 10px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 0.85rem;">
+                <select name="driverId" onchange="this.form.submit()" style="padding: 8px 12px; border-radius: 8px; background: #0f172a; border: 1px solid var(--ups-gold); color: #fff; font-size: 0.9rem; font-weight: 700;">
                     @foreach (var d in drivers)
                     {
                         if (d.Id == selectedDriverId)
                         {
-                            <option value="@d.Id" selected>@d.Name</option>
+                            <option value="@d.Id" selected>@d.Name (@d.VehicleId)</option>
                         }
                         else
                         {
-                            <option value="@d.Id">@d.Name</option>
+                            <option value="@d.Id">@d.Name (@d.VehicleId)</option>
                         }
                     }
                 </select>
@@ -49,204 +56,224 @@
         </div>
     }
 
-    @if (Model == null || !Model.Stops.Any())
+    @if (!hasRoute)
     {
         <div class="glass-card" style="text-align: center; padding: 3rem 1.5rem;">
-            <i class="fa-solid fa-truck-dash" style="font-size: 3rem; color: var(--ups-gold); margin-bottom: 1rem;"></i>
-            <h3 style="font-weight: 700; margin-bottom: 0.5rem;">No tienes rutas asignadas para hoy</h3>
+            <i class="fa-solid fa-truck-ramp-box" style="font-size: 3rem; color: var(--ups-gold); margin-bottom: 1rem;"></i>
+            <h3 style="font-weight: 700; margin-bottom: 0.5rem;">No hay artículos asignados</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem;">
-                Solicita al despachador que cargue la planilla de entregas.
+                El despachador aún no ha cargado una ruta para <strong>@(currentDriver?.Name ?? "este conductor")</strong>.
             </p>
+            <a asp-controller="Dispatch" asp-action="Index" class="btn-orion-secondary" style="margin-top: 1rem; display: inline-block;">
+                <i class="fa-solid fa-file-csv"></i> Ir al Panel de Carga CSV
+            </a>
         </div>
     }
     else
     {
-        <!-- Active Route Progress Banner -->
-        <div class="glass-card" style="margin-bottom: 1.25rem; background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95)); border: 1px solid rgba(255,181,0,0.3);">
+        <!-- Active Route Status Banner -->
+        <div class="glass-card" style="margin-bottom: 1.25rem; background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98)); border: 1px solid rgba(255,181,0,0.3);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <div style="font-weight: 800; font-size: 1.1rem; color: var(--ups-gold);">
-                    <i class="fa-solid fa-route"></i> @Model.Name
+                    <i class="fa-solid fa-route"></i> @Model!.Name
                 </div>
-                <span class="status-badge status-active">@Model.Status</span>
+                @if (isCompleted)
+                {
+                    <span class="status-badge status-delivered">Finalizado</span>
+                }
+                else if (hasInitialKm)
+                {
+                    <span class="status-badge status-active"><i class="fa-solid fa-spinner fa-spin"></i> En Ruta</span>
+                }
+                else
+                {
+                    <span class="status-badge status-pending">Esperando Odómetro Inicial</span>
+                }
             </div>
 
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
-                <span>Total Paradas: <strong style="color: #fff;">@Model.Stops.Count</strong></span>
-                <span>Completadas: <strong style="color: var(--accent-green);">@Model.Stops.Count(s => s.Status != "Pendiente")</strong></span>
-                <span>Distancia Est.: <strong style="color: var(--accent-blue);">@Model.TotalDistanceKm km</strong></span>
+                <span>Total Artículos: <strong style="color: #fff;">@totalStops</strong></span>
+                <span>Entregados: <strong style="color: var(--accent-green);">@deliveredStops / @totalStops</strong></span>
+                <span>Dist. Est.: <strong style="color: var(--accent-blue);">@Model.TotalDistanceKm km</strong></span>
             </div>
         </div>
 
-        <!-- Formulario Registro de Odómetro (HU06) -->
-        <div class="glass-card" style="margin-bottom: 1.5rem; border: 1px solid rgba(255, 181, 0, 0.4);">
-            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; color: var(--ups-gold); display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-gauge-high"></i> Registro de Kilometraje Real (Odómetro)
-            </h3>
+        @if (!hasInitialKm)
+        {
+            <!-- BLOQUEO POR ODOMETRO INICIAL (HU06 - Criterio 1) -->
+            <div class="glass-card" style="margin-bottom: 1.5rem; border: 2px solid var(--ups-gold); box-shadow: 0 0 20px rgba(255, 181, 0, 0.2);">
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-lock" style="font-size: 2.2rem; color: var(--ups-gold); margin-bottom: 0.5rem;"></i>
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: #fff;">Paso Obligatorio: Inicio de Jornada</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        Para visualizar la hoja de ruta y direcciones de entrega, registre el kilometraje inicial de su vehículo.
+                    </p>
+                </div>
 
-            <form asp-action="SaveOdometer" method="post">
-                <input type="hidden" name="routeId" value="@Model.Id" />
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem;">
-                    <div>
-                        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #e2e8f0;">
-                            KM Inicial (Al salir):
+                <form asp-action="StartRoute" method="post">
+                    <input type="hidden" name="routeId" value="@Model.Id" />
+                    
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; color: #e2e8f0;">
+                            <i class="fa-solid fa-gauge-simple-high" style="color: var(--ups-gold);"></i> Kilometraje Inicial (Odómetro):
                         </label>
                         <input type="number" name="initialKm" min="1" step="1" required 
-                               value="@(Model.InitialKm.HasValue ? Model.InitialKm.Value.ToString() : "")"
-                               placeholder="Ej: 120500" 
-                               style="width: 100%; padding: 10px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 1rem; font-weight: 700;" />
+                               placeholder="Ej: 50200" 
+                               style="width: 100%; padding: 12px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 1.2rem; font-weight: 800; text-align: center;" />
                     </div>
 
+                    <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 0.9rem; font-size: 1rem;">
+                        <i class="fa-solid fa-key"></i> Guardar Odómetro y Desbloquear Ruta
+                    </button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <!-- KILOMETRAJE REGISTRADO & FORMULARIO FINAL (HU06) -->
+            <div class="glass-card" style="margin-bottom: 1.5rem; border: 1px solid rgba(255, 181, 0, 0.4);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <div>
-                        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #e2e8f0;">
-                            KM Final (Al regresar):
-                        </label>
-                        <input type="number" name="finalKm" min="1" step="1" required 
-                               value="@(Model.FinalKm.HasValue ? Model.FinalKm.Value.ToString() : "")"
-                               placeholder="Ej: 120645" 
-                               style="width: 100%; padding: 10px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 1rem; font-weight: 700;" />
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Odómetro Inicial:</span>
+                        <div style="font-size: 1.2rem; font-weight: 800; color: var(--ups-gold);">@(Model.InitialKm ?? 0) km</div>
                     </div>
+
+                    @if (isCompleted)
+                    {
+                        <div style="text-align: right;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Odómetro Final:</span>
+                            <div style="font-size: 1.2rem; font-weight: 800; color: var(--accent-green);">@(Model.FinalKm ?? 0) km</div>
+                        </div>
+                    }
                 </div>
 
-                @if (Model.InitialKm.HasValue && Model.FinalKm.HasValue)
+                @if (isCompleted)
                 {
-                    int totalRealKm = Model.FinalKm.Value - Model.InitialKm.Value;
-                    <div style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.9rem; color: var(--text-muted);">Distancia Real Recorrida:</span>
-                        <strong style="font-size: 1.2rem; color: var(--accent-blue);">@totalRealKm KM</strong>
+                    <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); padding: 12px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 0.9rem; color: #4ade80;">Jornada Finalizada. Distancia Real Recorrida:</span>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 4px;">@((Model.FinalKm ?? 0) - (Model.InitialKm ?? 0)) KM</div>
                     </div>
                 }
+                else
+                {
+                    <!-- Formulario Kilometraje Final: Bloqueado hasta 100% de entregas (HU06 Criterio 3) -->
+                    <form asp-action="CompleteRoute" method="post" onsubmit="return validateFinalKm()">
+                        <input type="hidden" name="routeId" value="@Model.Id" />
+                        <input type="hidden" id="hiddenInitialKm" value="@(Model.InitialKm ?? 0)" />
 
-                <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem;">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar Registro de Odómetro
-                </button>
-            </form>
-        </div>
-
-        <!-- Vertical Stops List (1 to N) with Cancellation Modal (HU10) -->
-        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-            @foreach (var stop in Model.Stops)
-            {
-                var isCancelled = stop.Status == "No entregado";
-                var isDelivered = stop.Status == "Entregado";
-                
-                var cardBg = isCancelled 
-                    ? "background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4);" 
-                    : (isDelivered 
-                        ? "background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4);" 
-                        : "background: var(--bg-card); border: 1px solid var(--border-color);");
-
-                <div style="@cardBg border-radius: 14px; padding: 1.1rem; backdrop-filter: blur(12px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                    
-                    <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.85rem;">
-                        <div style="background: linear-gradient(135deg, var(--ups-gold), #f59e0b); color: #111; font-weight: 800; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(255, 181, 0, 0.3);">
-                            #@stop.SequenceOrder
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #e2e8f0;">
+                                Kilometraje Final al Completar Todas las Paradas:
+                            </label>
+                            <input type="number" id="finalKmInput" name="finalKm" min="@(Model.InitialKm ?? 0)" step="1" required 
+                                   @(allDelivered ? "" : "disabled")
+                                   placeholder="@(allDelivered ? $"Mínimo {Model.InitialKm ?? 0} km (Ej: {(Model.InitialKm ?? 0) + 45})" : "Complete el 100% de las paradas para habilitar")"
+                                   style="width: 100%; padding: 10px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 1rem; font-weight: 700;" />
                         </div>
 
-                        <div style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                                <h4 style="font-weight: 800; font-size: 1.05rem; color: #fff;">
-                                    @stop.CustomerName
-                                </h4>
-                                @if (isCancelled)
-                                {
-                                    <span class="status-badge status-cancelled">No entregado</span>
-                                }
-                                else if (isDelivered)
-                                {
-                                    <span class="status-badge status-delivered">Entregado</span>
-                                }
-                                else
-                                {
-                                    <span class="status-badge status-pending">Pendiente</span>
-                                }
+                        @if (!allDelivered)
+                        {
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-info" style="color: var(--ups-gold);"></i> Faltan <strong>@(totalStops - deliveredStops)</strong> paradas por entregar para desbloquear el odómetro final.
+                            </div>
+                        }
+
+                        <button type="submit" class="btn-orion-primary" @(allDelivered ? "" : "disabled") style="width: 100%; padding: 0.85rem; font-size: 0.95rem; @(allDelivered ? "background: linear-gradient(135deg, #22c55e, #16a34a);" : "opacity: 0.5; cursor: not-allowed;")">
+                            <i class="fa-solid fa-flag-checkered"></i> Completar Jornada y Guardar Odómetro Final
+                        </button>
+                    </form>
+                }
+            </div>
+
+            <!-- LISTA SECUENCIAL DE ARTICULOS / PARADAS (HU04 & HU05) -->
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                @foreach (var stop in Model.Stops)
+                {
+                    bool isDelivered = stop.Status == "Entregado";
+                    var cardBg = isDelivered 
+                        ? "background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4);" 
+                        : "background: var(--bg-card); border: 1px solid var(--border-color);";
+
+                    <div style="@cardBg border-radius: 14px; padding: 1.1rem; backdrop-filter: blur(12px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        
+                        <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.85rem;">
+                            <!-- Stop Order Badge (1..N) -->
+                            <div style="background: @(isDelivered ? "#22c55e" : "linear-gradient(135deg, var(--ups-gold), #f59e0b)"); color: #111; font-weight: 800; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                #@stop.SequenceOrder
                             </div>
 
-                            <div style="color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-location-dot" style="color: var(--ups-gold);"></i>
-                                <span>@stop.FullAddress</span>
-                            </div>
-
-                            @if (!string.IsNullOrEmpty(stop.CancellationReason))
-                            {
-                                <div style="margin-top: 6px; font-size: 0.85rem; color: #fca5a5; background: rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>Motivo de Cancelación:</strong> @stop.CancellationReason
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                                    <div>
+                                        <h4 style="font-weight: 800; font-size: 1.05rem; color: #fff;">
+                                            <i class="fa-solid fa-box" style="color: var(--ups-gold); margin-right: 4px;"></i> @stop.ArticleName
+                                        </h4>
+                                        <div style="font-size: 0.85rem; color: #cbd5e1; margin-top: 2px;">
+                                            Cliente: <strong>@stop.CustomerName</strong>
+                                        </div>
+                                    </div>
+                                    @if (isDelivered)
+                                    {
+                                        <span class="status-badge status-delivered">Entregado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge status-pending">Pendiente</span>
+                                    }
                                 </div>
+
+                                <div style="color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-location-dot" style="color: var(--ups-gold);"></i>
+                                    <span>@stop.FullAddress</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons (HU05: Enlace GPS & HU06: Marcar Entregado) -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem;">
+                            
+                            <!-- HU05: Boton "Ir a la entrega" con enlace estandar a Google Maps -->
+                            <a href="@stop.GetGoogleMapsUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-primary" style="padding: 9px; font-size: 0.85rem; background: linear-gradient(135deg, #4285F4, #34A853); color: #fff; text-align: center; text-decoration: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="fa-solid fa-location-arrow"></i> Ir a la entrega
+                            </a>
+
+                            <!-- HU06: Boton "Marcar Entregado" -->
+                            @if (isDelivered)
+                            {
+                                <button type="button" disabled style="padding: 9px; font-size: 0.85rem; background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80; border-radius: 8px; cursor: default;">
+                                    <i class="fa-solid fa-check-double"></i> Completado
+                                </button>
+                            }
+                            else
+                            {
+                                <form asp-action="MarkDelivered" method="post" style="margin: 0;">
+                                    <input type="hidden" name="stopId" value="@stop.Id" />
+                                    <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 9px; font-size: 0.85rem; background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff;">
+                                        <i class="fa-solid fa-circle-check"></i> Marcar Entregado
+                                    </button>
+                                </form>
                             }
                         </div>
-                    </div>
-
-                    <!-- Navigation Action Buttons (HU05) -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0.85rem;">
-                        <a href="@stop.GetGoogleMapsUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-primary" style="padding: 7px; font-size: 0.8rem; background: linear-gradient(135deg, #4285F4, #34A853); color: #fff;">
-                            <i class="fa-solid fa-map-location-dot"></i> Google Maps
-                        </a>
-                        
-                        <a href="@stop.GetWazeUrl()" target="_blank" rel="noopener noreferrer" class="btn-orion-secondary" style="padding: 7px; font-size: 0.8rem; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
-                            <i class="fa-solid fa-diamond-turn-right"></i> Waze
-                        </a>
-                    </div>
-
-                    <!-- Delivery & Cancellation Actions (HU10) -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem;">
-                        
-                        <form asp-action="MarkDelivered" method="post" style="margin: 0;">
-                            <input type="hidden" name="stopId" value="@stop.Id" />
-                            <button type="submit" class="btn-orion-primary" style="width: 100%; padding: 8px; font-size: 0.85rem; background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff;">
-                                <i class="fa-solid fa-circle-check"></i> Entregado
-                            </button>
-                        </form>
-
-                        <button type="button" onclick="toggleCancelModal(@stop.Id)" class="btn-orion-danger" style="width: 100%; padding: 8px; font-size: 0.85rem;">
-                            <i class="fa-solid fa-ban"></i> Cancelar Parada
-                        </button>
 
                     </div>
-
-                    <!-- Dropdown cancellation modal (HU10) -->
-                    <div id="cancelModal_@stop.Id" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 10px;">
-                        <form asp-action="CancelStop" method="post">
-                            <input type="hidden" name="stopId" value="@stop.Id" />
-                            
-                            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #fca5a5; margin-bottom: 6px;">
-                                Seleccione el Motivo de No Entrega (HU10):
-                            </label>
-
-                            <select name="reason" required style="width: 100%; padding: 8px; border-radius: 6px; background: #1e293b; color: #fff; border: 1px solid var(--border-color); font-size: 0.9rem; margin-bottom: 10px;">
-                                <option value="Cliente ausente">Cliente ausente</option>
-                                <option value="Dirección incorrecta">Dirección incorrecta</option>
-                                <option value="Zona inaccesible">Zona inaccesible</option>
-                                <option value="Rechazado por el cliente">Rechazado por el cliente</option>
-                                <option value="Vehículo averiado">Vehículo averiado</option>
-                            </select>
-
-                            <div style="display: flex; gap: 8px;">
-                                <button type="submit" class="btn-orion-danger" style="flex: 1; padding: 8px; font-size: 0.85rem;">
-                                    Confirmar Cancelación
-                                </button>
-                                <button type="button" onclick="toggleCancelModal(@stop.Id)" class="btn-orion-secondary" style="padding: 8px 12px; font-size: 0.85rem;">
-                                    Cerrar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
     }
-
 </div>
 
 @section Scripts {
     <script>
-        function toggleCancelModal(stopId) {
-            const modal = document.getElementById('cancelModal_' + stopId);
-            if (modal.style.display === 'none' || modal.style.display === '') {
-                modal.style.display = 'block';
-            } else {
-                modal.style.display = 'none';
+        function validateFinalKm() {
+            const initial = parseFloat(document.getElementById('hiddenInitialKm')?.value || '0');
+            const finalInput = document.getElementById('finalKmInput');
+            const finalVal = parseFloat(finalInput?.value || '0');
+
+            if (finalVal < initial) {
+                alert('El kilometraje final (' + finalVal + ' km) debe ser estrictamente mayor o igual al inicial (' + initial + ' km).');
+                return false;
             }
+            return true;
         }
     </script>
 }

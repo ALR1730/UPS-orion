@@ -16,6 +16,6 @@ namespace OrionMVP.Services
 
     public interface IRouteOptimizerService
     {
-        Task<OptimizationResultDto> OptimizeRouteAsync(int routeId, double startLat = -34.6037, double startLng = -58.3816);
+        Task<OptimizationResultDto> OptimizeRouteAsync(int routeId, double startLat = 18.4861, double startLng = -69.9312);
     }
 }

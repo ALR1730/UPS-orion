@@ -1,57 +1,60 @@
 @{
-    ViewData["Title"] = "Panel Principal - UPS ORION MVP";
+    ViewData["Title"] = "Panel Principal - ORION MVP Piloto";
 }
 
 <div style="text-align: center; margin-bottom: 3rem;">
+    <span class="brand-badge" style="font-size: 0.9rem; padding: 6px 14px; margin-bottom: 0.75rem; display: inline-block;">
+        <i class="fa-solid fa-flag-checkered"></i> DEMO OFICIAL SPRINT REVIEW
+    </span>
     <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-        UPS ORION - Sistema de Optimización de Rutas
+        ORION - Optimización y Secuenciación de Rutas
     </h1>
-    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 650px; margin: 0 auto;">
-        MVP Piloto desarrollado en C# (.NET 10) para secuenciación inteligente de paradas, geocodificación, telemetría y navegación vehicular.
+    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 720px; margin: 0 auto;">
+        Plataforma digital para la prueba piloto controlada de 5 conductores en zona urbana, diseñada para validar la reducción del 8% al 10% en kilómetros recorridos.
     </p>
 </div>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
     
-    <!-- Módulo Despacho -->
+    <!-- Módulo Despacho (HU01 - HU03) -->
     <div class="glass-card">
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
             <div style="background: rgba(255, 181, 0, 0.15); color: var(--ups-gold); padding: 12px; border-radius: 12px; font-size: 1.5rem;">
-                <i class="fa-solid fa-truck-ramp-box"></i>
+                <i class="fa-solid fa-file-csv"></i>
             </div>
             <div>
-                <h3 style="font-weight: 700; font-size: 1.2rem;">Despachador del Piloto</h3>
-                <span class="status-badge status-pending">HU01 - HU03</span>
+                <h3 style="font-weight: 700; font-size: 1.2rem;">Despacho & Secuenciación</h3>
+                <span class="status-badge status-pending">SCRUM-41 & 42 (HU01-03)</span>
             </div>
         </div>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-            Carga de planillas (CSV/Excel), geocodificación automática de direcciones y ejecución del algoritmo estático secuenciador (TSP Nearest Neighbor).
+            Carga masiva de artículos vía CSV con sanitización decimal y ordenamiento automático mediante el algoritmo de vecino más cercano por cercanía lineal.
         </p>
-        <a asp-controller="Dispatch" asp-action="Index" class="btn-orion-primary" style="width: 100%;">
-            Acceder a Despacho <i class="fa-solid fa-arrow-right"></i>
+        <a asp-controller="Dispatch" asp-action="Index" class="btn-orion-primary" style="width: 100%; text-align: center; display: block;">
+            Acceder a Despacho CSV <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 
-    <!-- Módulo Conductor -->
+    <!-- Módulo Conductor (HU04 - HU06) -->
     <div class="glass-card">
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
             <div style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); padding: 12px; border-radius: 12px; font-size: 1.5rem;">
-                <i class="fa-solid fa-mobile-button"></i>
+                <i class="fa-solid fa-mobile-screen-button"></i>
             </div>
             <div>
                 <h3 style="font-weight: 700; font-size: 1.2rem;">App Móvil Conductor</h3>
-                <span class="status-badge status-active">HU04 - HU06, HU10</span>
+                <span class="status-badge status-active">SCRUM-43 (HU04-06)</span>
             </div>
         </div>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-            Visualización vertical de paradas 1..N, navegación GPS nativa (Google Maps / Waze), registro de odómetro inicial/final y motivo de cancelación.
+            Selector rápido de 5 conductores, bloqueo por odómetro inicial, visualización 1..N con enlaces GPS a Google Maps y validación de odómetro final.
         </p>
-        <a asp-controller="Driver" asp-action="Index" class="btn-orion-secondary" style="width: 100%;">
-            Abrir Vista Conductor <i class="fa-solid fa-arrow-right"></i>
+        <a asp-controller="Driver" asp-action="Index" class="btn-orion-secondary" style="width: 100%; text-align: center; display: block;">
+            Abrir App Conductor <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 
-    <!-- Módulo Supervisor -->
+    <!-- Módulo Supervisor (HU07) -->
     <div class="glass-card">
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
             <div style="background: rgba(34, 197, 94, 0.15); color: var(--accent-green); padding: 12px; border-radius: 12px; font-size: 1.5rem;">
@@ -59,57 +62,49 @@
             </div>
             <div>
                 <h3 style="font-weight: 700; font-size: 1.2rem;">Panel de Supervisor</h3>
-                <span class="status-badge status-delivered">HU07, HU08, HU09</span>
+                <span class="status-badge status-delivered">SCRUM-44 (HU07)</span>
             </div>
         </div>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-            Supervisión en vivo de flujos de despacho, reportes de comparación de distancia real vs histórica y gráfico de porcentaje de ahorro de combustible.
+            Monitoreo en vivo de la flota piloto, cálculo de kilometraje neto (`Final - Inicial`), ahorro respecto a la línea base y exportación a reporte CSV.
         </p>
-        <a asp-controller="Supervisor" asp-action="Index" class="btn-orion-secondary" style="width: 100%;">
-            Ver Dashboard Supervisor <i class="fa-solid fa-arrow-right"></i>
+        <a asp-controller="Supervisor" asp-action="Index" class="btn-orion-secondary" style="width: 100%; text-align: center; display: block;">
+            Ver Reporte Supervisor <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 
 </div>
 
-<!-- Estado de Historias -->
+<!-- Resumen del Sprint 1 -->
 <div class="glass-card">
-    <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
-        <i class="fa-solid fa-list-check" style="color: var(--ups-gold);"></i> Estado de Historias de Usuario
-    </h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
-            <strong style="color: var(--accent-green);">✓ HU00:</strong> Estructura e Infraestructura C#
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+        <h3 style="font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-list-check" style="color: var(--ups-gold);"></i> Arquitectura de Historias del Sprint 1 (14 Story Points)
+        </h3>
+        <span class="status-badge status-delivered">100% Completado (Definition of Done)</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;">
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU01 (2 SP):</strong> Base de Datos & Poblado 5 Choferes
         </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU01:</strong> Carga Excel/CSV
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU02 (2 SP):</strong> Carga CSV Artículos & Sanitización
         </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU02:</strong> Geocodificación Básica
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU03 (2 SP):</strong> Secuenciador Proximidad Lineal
         </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU03:</strong> Secuenciador TSP
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU04 (2 SP):</strong> Vista Móvil Hoja de Ruta 1..N
         </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU04:</strong> Vista Móvil Conductor
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU05 (1 SP):</strong> Enlace GPS Profundo Google Maps
         </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU05:</strong> Enlace Maps / Waze
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU06 (2 SP):</strong> Odómetro Inicial/Final & Bloqueos
         </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU06:</strong> Odómetro Inicial/Final
-        </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU07:</strong> Reporte Comparativo KM
-        </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU08:</strong> BD Local del Piloto
-        </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU09:</strong> Panel Control Despacho
-        </div>
-        <div style="background: rgba(255, 255, 255, 0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted);">
-            <strong>HU10:</strong> Cancelación de Parada
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+            <strong style="color: var(--accent-green);">✓ HU07 (3 SP):</strong> Tablero Supervisor & Exportador CSV
         </div>
     </div>
 </div>
