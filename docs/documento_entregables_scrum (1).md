@@ -17,6 +17,7 @@
     *   **Jhois Collado (20211124@itla.edu.do):** Backend de Analítica, Cálculos Automáticos de Kilómetros y Exportador CSV (HU07).
     *   **Josteen Mayobanex Del Orbe (20240270@itla.edu.do):** Aseguramiento de la Calidad (QA), Pruebas Unitarias de Rutas y Validación de Criterios de Aceptación.
     *   **yassil del orbe (20242536@itla.edu.do):** Pruebas de Carga e Integración de Datos, Simulación de Campo de los 5 Conductores Piloto.
+    *   **Jasuel De Los Santos (20231983@itla.edu.do):** Célula Frontend & App Móvil, Lógica de Excepción y Cancelación de Paradas (HU10).
 
 ### 2. Herramientas de Gestión y Repositorio de Código
 *   **Tablero de Gestión (Jira Software):** [Tablero Jira ORION - ITLA](https://itla-adm.atlassian.net/jira/software/projects/SCRUM/boards/1)
@@ -288,3 +289,115 @@
 
 #### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
 > *"En un próximo Sprint aplicaría como regla innegociable: (1) Dailies síncronas obligatorias a primera hora con un límite estricto de tiempo para detectar bloqueos en menos de 24 horas; (2) firmas de contratos de interfaces de datos (JSON/CSV) antes de tirar la primera línea de código; y (3) fomentar una cultura de comunicación abierta y temprana donde cualquier duda sobre el alcance se plantee de inmediato al Product Owner sin esperar a que se acumulen retrasos."*
+
+---
+
+### 👤 Evaluación Individual - Arquitectura Cloud & Base de Datos (Anthonny Brayhan Soriano Franco)
+
+* **Nombre del Integrante:** Anthonny Brayhan Soriano Franco  
+* **Matrícula:** 2024-2266  
+* **Rol en el Sprint:** Arquitectura Cloud, Diseño de Esquemas e Inicialización de la Base de Datos (HU01)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia trabajando en equipo fue buena y me permitió entender mejor la importancia de la comunicación entre los diferentes integrantes. En mi caso, trabajé principalmente en la parte de la base de datos y tuve que coordinar con los compañeros que estaban trabajando en el backend y en las demás partes del sistema para que la estructura de los datos fuera compatible con sus necesidades. Al principio tuvimos algunas dificultades de comunicación y organización, pero después logramos coordinarnos mejor y avanzar de manera más fluida."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Trabajar con Scrum fue una experiencia interesante porque permitió dividir el proyecto en historias de usuario y asignar responsabilidades específicas. El uso de Jira ayudó a tener una mejor visión de las tareas pendientes y del progreso del Sprint. También pude entender mejor la importancia de las Daily Scrum para comunicar qué se hizo, qué se va a hacer y si existe algún bloqueo. Considero que Scrum nos ayudó especialmente cuando tuvimos que reorganizarnos debido a los retrasos iniciales."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Aprendí más sobre cómo estructurar una base de datos para un proyecto que tiene varios módulos que dependen de ella. Trabajé en la creación y organización de las tablas relacionadas con los conductores, rutas y artículos, además de la inicialización de los datos necesarios para el piloto."*
+> * **A nivel metodológico:** *"Aprendí que antes de comenzar a desarrollar es importante tener claro cómo se van a manejar los datos y cómo se van a comunicar los diferentes módulos. También aprendí que una tarea no debe verse solamente de forma individual, sino teniendo en cuenta cómo va a afectar o integrarse con el trabajo de los demás compañeros."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"La principal dificultad fue la falta de coordinación durante los primeros días del Sprint. Al principio no estaban completamente definidos algunos aspectos de la estructura de datos y de la integración con los demás módulos, por lo que fue necesario esperar a que se aclararan ciertas decisiones antes de continuar. También fue necesario coordinar con el compañero encargado del backend para asegurar que los datos provenientes del CSV pudieran almacenarse correctamente en la estructura de la base de datos. Una vez que se establecieron los campos y relaciones necesarias, el trabajo pudo avanzar con mayor facilidad."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Considero que pudimos haber definido desde el primer día la arquitectura general del proyecto, las estructuras de datos y las responsabilidades de cada integrante. También habría sido mejor establecer desde el inicio un canal principal de comunicación para evitar que las informaciones importantes se dispersaran. De esta manera, los integrantes que dependían del trabajo de otros compañeros hubieran podido avanzar más rápido y se habría reducido el retraso que tuvimos al inicio del Sprint."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint trataría de definir primero las estructuras y contratos de datos que utilizarán los diferentes módulos antes de comenzar a desarrollar. También comunicaría cualquier bloqueo o duda lo antes posible para evitar que un problema pequeño termine afectando el trabajo de otros compañeros. Además, mantendría una comunicación más constante con los integrantes cuyos módulos dependen directamente de la base de datos y utilizaría Jira y Git de manera más organizada para que todos puedan conocer el estado de las tareas y los cambios realizados."*
+
+---
+
+### 👤 Evaluación Individual - Frontend & App Móvil (Jasuel De Los Santos)
+
+* **Nombre del Integrante:** Jasuel De Los Santos  
+* **Matrícula:** 2023-1983  
+* **Rol en el Sprint:** Developer (Célula Frontend & App Móvil - HU10: Cancelación de Paradas)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Fue una experiencia bastante colaborativa y coordinada. Al estar divididos en células funcionales, la comunicación dentro de la célula de Frontend/Móvil fue constante para mantener la misma línea gráfica y experiencia de usuario que utilizaban mis compañeros en las pantallas de la app del conductor y el panel web."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Muy dinámica y enfocada. Tener un Sprint corto nos obligó a priorizar lo que realmente aportaba valor al MVP. El seguimiento mediante el tablero de Jira y las reuniones rápidas permitieron que todos supiéramos qué parte de la interfaz estaba lista y cómo se conectaba con las entregas de las demás Historias de Usuario."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Aprendí a diseñar e implementar flujos de excepción en interfaces móviles responsive, asegurando que cuando un chofer cancela una parada, la interfaz maneje estados dinámicos (captura del motivo de no entrega, actualización de la lista y salto automático a la siguiente parada) sin romper la secuencia general de la ruta."*
+> * **A nivel metodológico:** *"Aprendí la importancia de apegarse estrictamente a la Definition of Done (DoD) para no dar por terminada una pantalla hasta que responda bien en dispositivos móviles."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El principal reto fue controlar la lógica visual para que la app no permitiera cancelar una parada 'en blanco' sin seleccionar obligatoriamente un motivo de la lista desplegable (ej. Cliente ausente, dirección errónea), y garantizar que al marcarla como 'No entregada', el contador global de paradas pendientes se actualizará correctamente para no bloquear la pantalla de cierre de turno del chofer."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Estandarizar desde las primeras horas del Sprint el diseño base (componentes de UI, colores y tamaños de botones) entre el equipo web y móvil, para evitar pequeños reajustes visuales al momento de integrar las pantallas del conductor."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"Implementaría un maquetado rápido (wireframing) de los componentes compartidos desde el Día 1 antes de tirar código de la interfaz, y realizaría pruebas de usabilidad simuladas en pantallas de teléfonos reales con más frecuencia durante el desarrollo."*
+
+---
+
+### 👤 Evaluación Individual - QA & Integración (Josteen Mayobanex Del Orbe)
+
+* **Nombre del Integrante:** Josteen Mayobanex Del Orbe  
+* **Matrícula:** 2024-0270  
+* **Rol en el Sprint:** Developer QA / Integración  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia comenzó con dificultades debido a la desalineación inicial de 4 días en el equipo. Sin embargo, tras la Daily extraordinaria, logramos coordinarnos activamente para ejecutar las pruebas End-to-End del piloto."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Scrum nos dio la estructura para recuperar el tiempo perdido y asegurar que las 7 historias de usuario cumplieran la Definition of Done."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico y metodológico:** *"Aprendí a crear baterías de pruebas automatizadas con datasets piloto y a diagnosticar fallas de compatibilidad en la ingesta de datos CSV."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El principal obstáculo fue la falta de comunicación inicial y la ausencia de un canal unificado para sincronizar las pruebas a tiempo. A nivel técnico, enfrentamos la corrupción de datos geográficos provocada por el uso de comas en lugar de puntos decimales en las coordenadas del archivo CSV."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Acordar canales oficiales de comunicación, estructuras de datos claras y dinámicas de trabajo conjunto desde el primer día, evitando asumir que la coordinación ocurriría de forma espontánea."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"Exigir contratos de datos firmados antes de programar y usar Dailies síncronas para resolver bloqueos en menos de 2 horas."*
+
+---
+
+### 👤 Evaluación Individual - Frontend Móvil Conductor (Luis Manuel Ortega Mejía)
+
+* **Nombre del Integrante:** Luis Manuel Ortega Mejía  
+* **Matrícula:** 2022-1134  
+* **Rol en el Sprint:** Developer (Célula Frontend & App Móvil - HU04: Vista Móvil de Hoja de Ruta y Artículos Asignados)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Fue una experiencia muy fluida y colaborativa. Trabajar por células nos permitió estar completamente sincronizados. En mi caso, la comunicación constante con la célula de backend fue clave para asegurar que los endpoints de datos de las rutas y conductores se integraran correctamente con la vista móvil responsive que estaba desarrollando en el frontend."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Al ser un Sprint de solo 1 semana, la metodología Scrum nos dio una estructura sumamente ágil y orientada a resultados. El tablero de Jira fue fundamental para dar seguimiento visual al avance de las subtareas de la HU04 (SCRUM-54, SCRUM-55 y SCRUM-56), permitiendo identificar cuellos de botella a tiempo y entregar un MVP plenamente funcional."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Profundicé en el desarrollo de interfaces mobile-first adaptativas bajo el concepto Glassmorphic UPS Theme, manejando estados dinámicos mediante peticiones GET asíncronas para el selector de conductores y ordenamiento en cliente/servidor mediante LINQ (.OrderBy(s => s.Sequence))."*
+> * **A nivel metodológico:** *"Reforcé el valor de la documentación rigurosa en Markdown dentro del proyecto y el cumplimiento de los Criterios de Aceptación para alinearse estrictamente con la Definition of Done (DoD)."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El mayor desafío técnico estuvo en garantizar que la interfaz se auto-ajustara correctamente a diversas resoluciones de pantallas móviles (entre 375px y 768px) manteniendo un alto contraste para lectura en entornos con luz solar, además de estructurar la tarjeta informativa para que mostrara claramente toda la información crítica del paquete (secuencia, cliente, dirección y estado) sin saturar la pantalla."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Pudo haberse definido un conjunto global de estilos CSS y componentes UI compartidos desde el primer día del Sprint entre las distintas historias de la interfaz del conductor, evitando así pequeños ajustes de alineación y consistencia visual al momento de unir la vista de hoja de ruta con otras pantallas del flujo operativo."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"Aplicaría la buena práctica de realizar pruebas continuas en dispositivos móviles físicos desde las primeras etapas del maquetado (en lugar de confiar únicamente en el emulador del navegador) e implementaría Smart Commits en Git enlazados directamente a las subtareas de Jira desde el día uno para automatizar aún más el rastreo del código."*
+
