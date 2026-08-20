@@ -401,3 +401,114 @@
 #### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
 > *"Aplicaría la buena práctica de realizar pruebas continuas en dispositivos móviles físicos desde las primeras etapas del maquetado (en lugar de confiar únicamente en el emulador del navegador) e implementaría Smart Commits en Git enlazados directamente a las subtareas de Jira desde el día uno para automatizar aún más el rastreo del código."*
 
+---
+
+### 👤 Evaluación Individual - Frontend Administrativo Supervisor (Emil Hari Montilla Salvador)
+
+* **Nombre del Integrante:** Emil Hari Montilla Salvador  
+* **Matrícula:** 2022-0287  
+* **Rol en el Sprint:** Frontend Administrativo del Panel de Control Consolidado del Supervisor (HU07)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia trabajando en equipo fue buena, aunque al principio tuvimos algunos problemas de comunicación y organización. Hubo varios días en los que no estaba muy claro qué tenía que hacer cada persona ni cómo se iban a conectar las diferentes partes del sistema, y eso nos atrasó bastante. Después de que nos organizamos mejor, pudimos dividir las responsabilidades y avanzar más rápido. En mi caso, trabajé principalmente en el frontend del panel administrativo junto con la persona encargada del backend, así que también tuve que coordinarme con él para saber qué datos iba a recibir y cómo los iba a mostrar en la tabla. Al final siento que logramos trabajar mucho mejor como equipo y completar el proyecto."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Trabajar con Scrum me ayudó a entender mejor cómo se puede organizar un proyecto entre varias personas. Algo que noté es que no basta con dividir las tareas, sino que también es importante estar comunicando constantemente qué se está haciendo y si existe algún problema. En nuestro caso, cuando empezamos a comunicarnos mejor y a tener más claras las historias de usuario y las responsabilidades de cada integrante, el trabajo comenzó a avanzar mucho más rápido. Creo que Scrum fue útil especialmente para detectar los bloqueos que teníamos y reorganizarnos antes de que fuera demasiado tarde."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Aprendí más sobre cómo se conecta el frontend con el resto de un sistema. Mi parte consistía en diseñar la tabla administrativa del supervisor, pero para poder mostrar la información correctamente dependía de los datos que venían del backend, como los artículos entregados, el kilometraje inicial y final y la distancia recorrida. Eso me ayudó a entender mejor que cada parte de un proyecto está relacionada con las demás."*
+> * **A nivel metodológico:** *"Aprendí que es muy importante tener claras las tareas y los criterios de aceptación desde el principio. Cuando cada integrante sabe exactamente qué tiene que entregar y cómo se conecta su trabajo con el de los demás, se evitan muchos problemas y retrabajos."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"La principal dificultad fue que mi parte dependía de información que tenía que venir de otras partes del sistema. Al principio, como todavía no estaba completamente definida la estructura de los datos y hubo problemas de comunicación entre el equipo, se hacía difícil saber exactamente cómo debía organizar la tabla y qué información iba a recibir desde el backend. Después de coordinarnos mejor y definir los campos que utilizaríamos, pude tener mucho más claro cómo debía funcionar el panel administrativo."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Creo que lo principal que pudo hacerse mejor fue la comunicación desde el inicio. Debimos definir desde el primer día las responsabilidades de cada integrante y explicar claramente qué necesitaba cada módulo de los demás. De esa manera, las personas encargadas del frontend no tendrían que esperar para saber qué datos recibirían y el backend también tendría claro qué información debía proporcionar. Considero que una mejor organización desde el comienzo nos habría evitado gran parte del atraso que tuvimos."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint trataría de tener una comunicación más constante desde el primer día. También definiría desde el inicio cómo se van a conectar el frontend, el backend y la base de datos, para que cada persona pueda avanzar sin tener que esperar a que otra parte esté completamente terminada. Otra cosa que aplicaría sería informar los bloqueos lo antes posible. Si alguien tiene una duda o necesita algo de otro integrante, es mejor comunicarlo de una vez y buscar una solución entre todos en lugar de dejar pasar varios días. Creo que con eso el equipo podría trabajar de una manera mucho más organizada y aprovechar mejor el tiempo del Sprint."*
+
+---
+
+### 👤 Evaluación Individual - Odómetros & QA Integración (Jostin Wilmer Perez Santana)
+
+* **Nombre del Integrante:** Jostin Wilmer Perez Santana  
+* **Matrícula:** 2022-1096  
+* **Rol en el Sprint:** Captura de Métricas en Campo y Validación Numérica de Odómetros (HU06) / Developer QA & Integración  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Al principio fue un poco complicado porque hubo falta de comunicación y varias partes del sistema dependían unas de otras. Después de organizarnos mejor en la Daily extraordinaria, pudimos coordinarnos, revisar el flujo completo del sistema y validar las funcionalidades antes de cerrar el Sprint."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Trabajar con Scrum nos ayudó a dividir el proyecto en historias de usuario y tener claro qué debía cumplir cada una. También nos permitió identificar los bloqueos, reorganizarnos cuando surgieron retrasos y verificar que las funcionalidades llegaran a cumplir con la Definition of Done."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico y metodológico:** *"Aprendí la importancia de probar una funcionalidad no solamente de forma individual, sino también integrada con el resto del sistema. En mi caso pude entender mejor las validaciones del flujo del conductor, como registrar el odómetro inicial, completar las entregas, validar el odómetro final y comprobar que la distancia recorrida se calculara correctamente. También aprendí cómo las pruebas End-to-End ayudan a comprobar un proceso completo."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"Una de las principales dificultades fue que al inicio no estaban completamente definidos algunos detalles del flujo, por ejemplo cómo se manejaría el registro del odómetro y cómo se conectarían los datos entre los diferentes módulos. Además, como equipo tuvimos problemas de comunicación durante los primeros días. Luego se aclararon los criterios y pudimos validar el flujo completo, incluyendo que el kilometraje final no fuera menor que el inicial."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Considero que desde el primer día debimos tener una comunicación más constante y definir mejor las dependencias entre cada historia de usuario. Eso habría permitido que desarrollo y QA trabajaran de forma más coordinada y que las pruebas se fueran realizando a medida que se terminaba cada funcionalidad, en vez de acumular trabajo para el final."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint trataría de involucrar QA desde el inicio, preparar los casos de prueba tomando como base los criterios de aceptación y probar cada historia tan pronto esté disponible. También mantendría las Dailies cortas y constantes para comunicar cualquier bloqueo rápidamente y evitar que un problema pequeño termine retrasando al resto del equipo."*
+
+---
+
+### 👤 Evaluación Individual - Backend Analítica & Reportes (Jhois Enmanuel Collado Fulcar)
+
+* **Nombre del Integrante:** Jhois Enmanuel Collado Fulcar  
+* **Matrícula:** 2021-1124  
+* **Rol en el Sprint:** Backend de Analítica, Cálculos Automáticos de Kilómetros y Exportador CSV (HU07)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia trabajando en equipo fue positiva. Pudimos dividir las responsabilidades según las tareas de cada integrante y colaborar para completar la historia de usuario. También fue importante mantener la comunicación para poder integrar correctamente el trabajo de cada uno."*
+
+#### 2. ¿Cómo fue trabajar utilizando Scrum?
+> *"Trabajar con Scrum ayudó a organizar las tareas y establecer objetivos claros durante el Sprint. Las historias de usuario y los criterios de aceptación permitieron tener una mejor idea de lo que debíamos completar."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico y metodológico:** *"Durante este Sprint aprendí principalmente la importancia de la organización y la comunicación dentro de un equipo. Al tener un tiempo limitado, fue necesario priorizar las tareas y concentrarse en cumplir los objetivos principales. También comprendí que dividir correctamente las responsabilidades facilita el trabajo, pero es necesario mantener una buena coordinación para que todas las partes del proyecto funcionen juntas."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"La principal dificultad fue el tiempo limitado del Sprint. También surgieron algunos momentos en los que era necesario coordinar el avance de las diferentes partes del proyecto para evitar retrasos."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Considero que se pudo mejorar la planificación inicial y tener una comunicación más constante sobre el progreso de cada tarea. Esto habría permitido identificar posibles problemas con mayor anticipación."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint organizaría mejor las tareas desde el inicio y definiría con más claridad las responsabilidades y prioridades. También realizaría revisiones más frecuentes durante el desarrollo, en lugar de esperar hasta el final para revisar el trabajo completo. Creo que estas prácticas ayudarían a evitar bloqueos, mejorar la coordinación del equipo y aprovechar mejor el tiempo disponible."*
+
+---
+
+### 👤 Evaluación Individual - QA Engineer & Simulación Piloto (Yassil Del Orbe)
+
+* **Nombre del Integrante:** Yassil Del Orbe  
+* **Matrícula:** 2024-2536  
+* **Rol en el Sprint:** QA Engineer / Pruebas de Carga e Integración de Datos, Simulación de Campo de los 5 Conductores Piloto  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia fue exigente pero enriquecedora. Al inicio del Sprint enfrentamos una desalineación de 4 días que afectó directamente mi trabajo, ya que no podía ejecutar pruebas de integración reales sin que backend y frontend tuvieran sus endpoints estables, una vez que el equipo se alineó, la coordinación mejoró notablemente y pude trabajar de la mano con Josteen para validar el flujo completo del sistema."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Scrum fue clave para poder simular en condiciones controladas el comportamiento real de los 5 conductores piloto en un tiempo tan corto. El tablero de Jira me permitió dar seguimiento a cada Historia de Usuario (HU01 a HU07) para saber exactamente cuándo cada módulo estaba listo para pruebas de integración y las Dailies nos ayudaron a detectar rápidamente inconsistencias entre los datos generados por AddressImportService y lo que consumía la vista del conductor."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Aprendí a diseñar y ejecutar pruebas de carga e integración sobre una arquitectura ASP.NET Core MVC con Entity Framework Core y SQLite, validando que el flujo de datos entre AddressImportService (ingesta CSV) y NearestNeighborOptimizerService (secuenciación) se mantuviera íntegro extremo a extremo. También simulé el comportamiento concurrente de los 5 conductores piloto navegando entre las vistas /Dispatch, /Driver y /Supervisor."*
+> * **A nivel metodológico:** *"Entendí la importancia de tener un ambiente de pruebas y un dataset piloto (15 artículos urbanos en Santo Domingo) listos desde el inicio del Sprint, para no depender de que otros módulos estuvieran terminados para empezar a validar."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El principal bloqueo fue la falta de un canal centralizado de comunicación durante los primeros días, lo que retrasó la definición de los casos de prueba. A nivel técnico, tuve que trabajar junto a Cesar Reyes para resolver la corrupción de coordenadas geográficas por el uso de comas en vez de puntos decimales en el CSV, y verificar que la sanitización con CultureInfo.InvariantCulture no afectara la persistencia de datos en la capa de EF Core."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Debimos establecer desde el Día 1 un ambiente de pruebas y contratos de datos claros entre los módulos, en lugar de esperar a que cada Historia de Usuario estuviera 'terminada' para empezar a integrar, eso habría permitido detectar antes el problema del formato decimal en el CSV."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"Implementaría pruebas de integración continuas desde el primer día (no solo al final del Sprint), automatizaría la validación del dataset piloto antes de cada carga masiva, y establecería checkpoints diarios de QA con backend para detectar errores de formato o persistencia en menos de 2 horas, en línea con la acción de mejora acordada por el equipo."*
+
+
