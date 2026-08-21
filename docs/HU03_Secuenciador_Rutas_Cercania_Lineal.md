@@ -4,7 +4,7 @@
 * **Ticket ID:** SCRUM-4 (HU03)
 * **Épica:** SCRUM-42 - Motor de Optimización y Secuenciación (Prioridad: High)
 * **Story Points:** 2
-* **Responsable:** Cesar Reyes (20241308@itla.edu.do)
+* **Responsable:** Jasuel De Los Santos (20231983@itla.edu.do)
 
 ---
 

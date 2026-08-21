@@ -9,7 +9,7 @@
     *   *Responsabilidad:* Facilitación de las ceremonias ágiles, remoción proactiva de impedimentos técnicos, protección del enfoque de desarrollo express (24 horas) y mantenimiento del flujo en el tablero de Jira.
 *   **Developers (Equipo Técnico y Componentes):**
     *   **Anthonny Brayhan Soriano Franco (20242266@itla.edu.do):** Arquitectura Cloud, Diseño de Esquemas e Inicialización de la Base de Datos (HU01).
-    *   **Cesar Reyes (20241308@itla.edu.do):** Backend de Ingesta, Validación de Carga Masiva CSV y Lógica del Algoritmo de Secuenciación Lineal (HU02, HU03).
+    *   **Cesar Reyes (20241308@itla.edu.do):** Backend de Ingesta y Validación de Carga Masiva CSV (HU02).
     *   **Luis Manuel Ortega Mejia (20221134@itlaedudo.onmicrosoft.com):** Frontend Móvil Responsive de la Lista de Hojas de Ruta del Conductor (HU04).
     *   **Angel Gabriel Morillo Rosario (20230554@itla.edu.do):** Integración Externa de Navegación por Enlaces Profundos a Google Maps Web (HU05).
     *   **Jostin Wilmer Perez (20221096@itlaedudo.onmicrosoft.com):** Captura de Métricas en Campo y Validación Numérica de Odómetros (HU06).
@@ -17,7 +17,7 @@
     *   **Jhois Collado (20211124@itla.edu.do):** Backend de Analítica, Cálculos Automáticos de Kilómetros y Exportador CSV (HU07).
     *   **Josteen Mayobanex Del Orbe (20240270@itla.edu.do):** Aseguramiento de la Calidad (QA), Pruebas Unitarias de Rutas y Validación de Criterios de Aceptación.
     *   **yassil del orbe (20242536@itla.edu.do):** Pruebas de Carga e Integración de Datos, Simulación de Campo de los 5 Conductores Piloto.
-    *   **Jasuel De Los Santos (20231983@itla.edu.do):** Célula Frontend & App Móvil, Lógica de Excepción y Cancelación de Paradas (HU10).
+    *   **Jasuel De Los Santos (20231983@itla.edu.do):** Motor de Optimización y Lógica del Algoritmo de Secuenciación Lineal (HU03).
 
 ### 2. Herramientas de Gestión y Repositorio de Código
 *   **Tablero de Gestión (Jira Software):** [Tablero Jira ORION - ITLA](https://itla-adm.atlassian.net/jira/software/projects/SCRUM/boards/1)
@@ -73,7 +73,7 @@
 
 ### 🗂️ ÉPICA 2: SCRUM-42 - Motor de Optimización y Secuenciación
 *   **Prioridad:** High
-*   **Responsable:** Cesar Reyes
+*   **Responsable:** Jasuel De Los Santos
 *   **Contexto de Negocio:** Es el cerebro del producto. Automatiza la toma de decisiones al reemplazar el criterio visual/manual del despachador por una secuencia matemática de paradas calculada bajo cercanía física en línea recta.
 *   **Formato de Historia:** Como Despachador del Piloto, quiero que el sistema ordene las paradas usando un algoritmo matemático lineal, para proveer una secuencia óptima que disminuya el desperdicio de combustible y kilómetros.
 *   **Criterios de Aceptación de la Épica:**
@@ -82,7 +82,7 @@
     *   Se escribe el orden de parada resultante de manera masiva en los registros de la base de datos.
 
 #### 📄 HU03 - Secuenciador Automático de Rutas por Cercanía Lineal
-*   **Story Points:** 2 | **Responsable:** Cesar Reyes
+*   **Story Points:** 2 | **Responsable:** Jasuel De Los Santos
 *   **Resumen:** Script en el backend que calcula el orden óptimo de paradas aplicando distancia lineal euclidiana.
 *   **Descripción:** Como Despachador del Piloto, quiero que el sistema ordene automáticamente los artículos cargados basándose en sus coordenadas geográficas, para agruparlos en una secuencia de paradas optimizada que reduzca la distancia total del recorrido.
 *   **Criterios de Aceptación:**
@@ -320,31 +320,59 @@
 
 ---
 
-### 👤 Evaluación Individual - Frontend & App Móvil (Jasuel De Los Santos)
+### 👤 Evaluación Individual - Backend Ingesta CSV (Cesar Reyes)
 
-* **Nombre del Integrante:** Jasuel De Los Santos  
-* **Matrícula:** 2023-1983  
-* **Rol en el Sprint:** Developer (Célula Frontend & App Móvil - HU10: Cancelación de Paradas)  
+* **Nombre del Integrante:** Cesar Reyes  
+* **Matrícula:** 2024-1308  
+* **Rol en el Sprint:** Developer (Backend de Ingesta y Validación de Carga Masiva CSV - HU02)  
 * **Fecha de Evaluación:** 19 de Agosto de 2026  
 
 #### 1. ¿Cómo fue su experiencia trabajando en equipo?
-> *"Fue una experiencia bastante colaborativa y coordinada. Al estar divididos en células funcionales, la comunicación dentro de la célula de Frontend/Móvil fue constante para mantener la misma línea gráfica y experiencia de usuario que utilizaban mis compañeros en las pantallas de la app del conductor y el panel web."*
+> *"Trabajar con el equipo me ayudó a entender mejor cómo se organiza un proyecto de software y la importancia de la comunicación constante. Durante el desarrollo del proyecto trabajé en la automatización de la carga masiva de datos y su integración backend. Aunque al principio tuvimos algunas dificultades de coordinación durante ciertas etapas del desarrollo, logramos alinearnos para sacar adelante la solución funcional."*
 
 #### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
-> *"Muy dinámica y enfocada. Tener un Sprint corto nos obligó a priorizar lo que realmente aportaba valor al MVP. El seguimiento mediante el tablero de Jira y las reuniones rápidas permitieron que todos supiéramos qué parte de la interfaz estaba lista y cómo se conectaba con las entregas de las demás Historias de Usuario."*
+> *"Trabajar con Scrum permitió estructurar los objetivos del Sprint y entender cómo una necesidad real del usuario se convierte en una funcionalidad dentro de un sistema. El seguimiento de las Historias de Usuario dio una visión más clara del progreso, aunque al inicio fue un reto trasladar los requisitos descritos a la solución técnica."*
 
 #### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
-> * **A nivel técnico:** *"Aprendí a diseñar e implementar flujos de excepción en interfaces móviles responsive, asegurando que cuando un chofer cancela una parada, la interfaz maneje estados dinámicos (captura del motivo de no entrega, actualización de la lista y salto automático a la siguiente parada) sin romper la secuencia general de la ruta."*
-> * **A nivel metodológico:** *"Aprendí la importancia de apegarse estrictamente a la Definition of Done (DoD) para no dar por terminada una pantalla hasta que responda bien en dispositivos móviles."*
+> * **A nivel técnico:** *"Aprendí a automatizar la ingesta masiva de artículos mediante archivos CSV (HU02), evitando el registro manual uno por uno. También comprendí cómo procesar y sanitizar datos geoespaciales (coordenadas decimales) para que puedan ser consumidos correctamente por el sistema y utilizados para establecer un orden de recorrido."*
+> * **A nivel metodológico:** *"Comprendí la importancia del procesamiento de datos en etapas tempranas y cómo la colaboración entre backend y QA es esencial para evitar la propagación de inconsistencias en el sistema."*
 
 #### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
-> *"El principal reto fue controlar la lógica visual para que la app no permitiera cancelar una parada 'en blanco' sin seleccionar obligatoriamente un motivo de la lista desplegable (ej. Cliente ausente, dirección errónea), y garantizar que al marcarla como 'No entregada', el contador global de paradas pendientes se actualizará correctamente para no bloquear la pantalla de cierre de turno del chofer."*
+> *"La principal dificultad fue comprender inicialmente cómo llevar los requisitos de las historias de usuario a la solución funcional del backend, además de resolver discrepancias en el formato de coordenadas decimales (comas vs. puntos) durante la lectura de los archivos CSV para garantizar una persistencia correcta."*
 
 #### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
-> *"Estandarizar desde las primeras horas del Sprint el diseño base (componentes de UI, colores y tamaños de botones) entre el equipo web y móvil, para evitar pequeños reajustes visuales al momento de integrar las pantallas del conductor."*
+> *"Considero que el equipo pudo haber mejorado la organización y la comunicación interna durante las primeras etapas del desarrollo, definiendo contratos de datos claros antes de iniciar la programación."*
 
 #### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
-> *"Implementaría un maquetado rápido (wireframing) de los componentes compartidos desde el Día 1 antes de tirar código de la interfaz, y realizaría pruebas de usabilidad simuladas en pantallas de teléfonos reales con más frecuencia durante el desarrollo."*
+> *"En un próximo Sprint planificaría mejor las tareas desde el principio, aclararía las responsabilidades de cada integrante y realizaría las pruebas de integración con más anticipación para detectar y resolver posibles problemas antes de la entrega final."*
+
+---
+
+### 👤 Evaluación Individual - Secuenciación & Algoritmos (Jasuel De Los Santos)
+
+* **Nombre del Integrante:** Jasuel De Los Santos  
+* **Matrícula:** 2023-1983  
+* **Rol en el Sprint:** Developer (Motor de Optimización y Secuenciación - HU03: Secuenciador Automático por Cercanía Lineal)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Fue una experiencia bastante colaborativa y coordinada. Al estar divididos en células funcionales, la comunicación con el equipo de backend e ingesta de datos fue constante para coordinar la lógica del algoritmo de secuenciación lineal y asegurar que el ordenamiento de paradas se integrara correctamente con los datos consumidos en la app del conductor y el panel web."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Muy dinámica y enfocada. Tener un Sprint corto nos obligó a priorizar lo que realmente aportaba valor al MVP. El seguimiento mediante el tablero de Jira y las reuniones rápidas permitieron que todos supiéramos cómo se calculaba la secuencia de paradas y cómo el servicio de optimización afectaba el flujo de las demás Historias de Usuario."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Aprendí a diseñar e implementar el algoritmo de ordenamiento por vecino más cercano (Nearest Neighbor) con cálculo de distancia por coordenadas geoespaciales, asegurando que los artículos cargados se ordenen de forma lineal desde el depósito base e inyectando enteros correlativos (1, 2, 3... N) a cada parada."*
+> * **A nivel metodológico:** *"Aprendí la importancia de apegarse estrictamente a la Definition of Done (DoD) para no dar por terminado un servicio de optimización hasta haber validado los casos borde de coordenadas nulas o inconsistentes."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El principal reto fue manejar la lógica matemática del vecino más cercano para controlar excepciones con coordenadas nulas o corruptas (como el formato de comas decimales provenientes de los CSV), garantizando que el ordenamiento asignara la secuencia correctamente en la base de datos sin detener la ejecución del sistema."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Estandarizar desde las primeras horas del Sprint la estructura y sanitización de las coordenadas geoespaciales entre la ingesta CSV y el algoritmo de secuenciación, para evitar pequeños reajustes de formato al momento de ejecutar la optimización."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"Implementaría pruebas unitarias automatizadas del algoritmo de secuenciación con diversos datasets geográficos desde el Día 1 antes de integrar el servicio con la base de datos y la interfaz gráfica."*
 
 ---
 
@@ -400,6 +428,34 @@
 
 #### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
 > *"Aplicaría la buena práctica de realizar pruebas continuas en dispositivos móviles físicos desde las primeras etapas del maquetado (en lugar de confiar únicamente en el emulador del navegador) e implementaría Smart Commits en Git enlazados directamente a las subtareas de Jira desde el día uno para automatizar aún más el rastreo del código."*
+
+---
+
+### 👤 Evaluación Individual - Navegación GPS Móvil (Angel Gabriel Morillo Rosario)
+
+* **Nombre del Integrante:** Angel Gabriel Morillo Rosario  
+* **Matrícula:** 2023-0554  
+* **Rol en el Sprint:** Developer (Integración Externa de Navegación por Enlaces Profundos a Google Maps Web - HU05)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia fue positiva en términos de aprendizaje, aunque marcada por los mismos retos de coordinación que afectaron a todo el equipo durante los primeros días del Sprint. Al enfocarme en una historia de usuario concreta (HU05, navegación GPS del conductor), pude mantener un avance relativamente autónomo, pero sentí la falta de sincronización con las áreas de backend y base de datos, especialmente en cuanto al formato en que llegarían las coordenadas de cada tarjeta. Una vez el Product Owner intervino para alinear expectativas, el trabajo en equipo mejoró notablemente y logramos integrar mi componente sin mayores fricciones."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Trabajar bajo Scrum me permitió entender el valor de dividir el trabajo en historias de usuario pequeñas y verificables. Al tener HU05 claramente delimitada (un solo story point, un objetivo específico: botón de navegación por tarjeta), pude enfocar mi esfuerzo sin dispersarme. También experimenté de primera mano cómo un Sprint corto de una semana exige que cualquier bloqueo se comunique de inmediato, ya que no hay margen de tiempo para resolver ambigüedades a mitad de camino."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel técnico:** *"Profundicé en la integración de funcionalidades de navegación externa dentro de una vista Razor (.cshtml), usando deep links de Google Maps con coordenadas en formato invariante (`CultureInfo.InvariantCulture`) y un mecanismo de respaldo por dirección (`Uri.EscapeDataString`) para los casos donde la geolocalización no estuviera disponible. También reforcé el uso de Bootstrap y Font Awesome para mantener consistencia visual dentro del módulo del conductor."*
+> * **A nivel metodológico:** *"Aprendí que documentar bien una historia de usuario -incluyendo su criterio de aceptación y el responsable del ticket- facilita enormemente el trabajo individual dentro de un Sprint, incluso cuando el equipo tiene fricciones de coordinación."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"El principal bloqueo fue la incertidumbre inicial sobre el formato exacto en que llegarían las coordenadas (lat/lng) desde la capa de datos, lo cual me obligó a esperar la definición del contrato de datos antes de poder cerrar completamente la lógica del botón de navegación. También hubo cierta ambigüedad sobre qué hacer cuando una tarjeta de artículo no tuviera coordenadas válidas, lo que resolví implementando el fallback por dirección."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Creo que debimos definir el contrato de datos (formato de coordenadas, manejo de nulos) desde el Sprint Planning, en lugar de descubrirlo sobre la marcha durante el desarrollo. Esto habría evitado tiempo de espera innecesario para historias como la mía, que dependen directamente de cómo llega la información desde otras capas del sistema."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint propondría: (1) Definir y firmar los contratos de datos entre frontend y backend antes de iniciar la implementación de cualquier historia que dependa de ellos; (2) Reportar bloqueos de dependencia el mismo día que se detectan, sin esperar a la Daily; y (3) Documentar desde el inicio los casos borde (como datos faltantes o inválidos) como parte del criterio de aceptación."*
 
 ---
 

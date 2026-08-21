@@ -21,7 +21,7 @@ Bienvenido a la documentación oficial del proyecto **ORION MVP** para la prueba
 | [HU00: Estructura del Proyecto y Configuración Base](HU00_Estructura_Proyecto.md) | - | Setup Base | - | Scrum Team |
 | [HU01: Base de Datos Local e Inicialización de Tablas](HU01_Base_Datos_Inicializacion_Tablas.md) | SCRUM-2 | SCRUM-41 (Infraestructura de Datos) | 2 SP | Anthonny Brayhan Soriano |
 | [HU02: Carga Centralizada de Artículos (CSV Express)](HU02_Carga_Centralizada_Articulos_CSV.md) | SCRUM-3 | SCRUM-41 (Infraestructura de Datos) | 2 SP | Cesar Reyes |
-| [HU03: Secuenciador Automático por Cercanía Lineal](HU03_Secuenciador_Rutas_Cercania_Lineal.md) | SCRUM-4 | SCRUM-42 (Motor de Optimización) | 2 SP | Cesar Reyes |
+| [HU03: Secuenciador Automático por Cercanía Lineal](HU03_Secuenciador_Rutas_Cercania_Lineal.md) | SCRUM-4 | SCRUM-42 (Motor de Optimización) | 2 SP | Jasuel De Los Santos |
 | [HU04: Vista Móvil de Hoja de Ruta Responsive](HU04_Vista_Movil_Hoja_Ruta.md) | SCRUM-5 | SCRUM-43 (Interfaz Móvil del Conductor) | 2 SP | Luis Manuel Ortega |
 | [HU05: Enlace GPS para Entrega de Artículos](HU05_Enlace_GPS_Entrega_Articulos.md) | SCRUM-6 | SCRUM-43 (Interfaz Móvil del Conductor) | 1 SP | Angel Gabriel Morillo |
 | [HU06: Cierre de Entrega y Registro de Odómetro](HU06_Cierre_Entrega_Registro_Odometro.md) | SCRUM-7 | SCRUM-43 (Interfaz Móvil del Conductor) | 2 SP | Jostin Wilmer Perez |

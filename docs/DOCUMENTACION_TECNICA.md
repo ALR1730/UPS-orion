@@ -185,7 +185,7 @@ Para garantizar que cualquier usuario abra los archivos `.csv` descargados direc
 |---|---|---|---|---|---|---|
 | **HU01** | SCRUM-2 | SCRUM-41 | 2 | Anthonny Soriano | ✅ 100% | Base SQLite, esquemas EF Core y 5 conductores fijos sembrados en `OrionDbContext.cs`. |
 | **HU02** | SCRUM-3 | SCRUM-41 | 2 | Cesar Reyes | ✅ 100% | Carga masiva CSV, validación de 5 columnas y sanitización decimal (comas a puntos). |
-| **HU03** | SCRUM-4 | SCRUM-42 | 2 | Cesar Reyes | ✅ 100% | Secuenciador lineal Haversine por vecino más cercano inyectando orden correlativo 1..N. |
+| **HU03** | SCRUM-4 | SCRUM-42 | 2 | Jasuel De Los Santos | ✅ 100% | Secuenciador lineal Haversine por vecino más cercano inyectando orden correlativo 1..N. |
 | **HU04** | SCRUM-5 | SCRUM-43 | 2 | Luis Ortega | ✅ 100% | Vista móvil responsive, selector rápido de los 5 choferes y tarjetas de entrega. |
 | **HU05** | SCRUM-6 | SCRUM-43 | 1 | Angel Morillo | ✅ 100% | Botón "Ir a la entrega" con enlace profundo a Google Maps (`?api=1&query={lat},{lng}`). |
 | **HU06** | SCRUM-7 | SCRUM-43 | 2 | Jostin Perez | ✅ 100% | Bloqueo por odómetro inicial (50,200 km), marcado individual y validación de odómetro final (50,245 km). |

@@ -16,7 +16,8 @@
 | **Product Owner (PO)** | Angel Luis Rosario | 20240079@itla.edu.do | Gestión del Product Backlog, validación de criterios de aceptación y alineación estratégica. |
 | **Scrum Master (SM)** | Juan Ectiversom Celedonio Solano | 20241562@itla.edu.do | Facilitación ágil, remoción de impedimentos técnicos y mantenimiento del flujo en Jira. |
 | **Developer** | Anthonny Brayhan Soriano Franco | 20242266@itla.edu.do | Arquitectura de datos, esquemas e inicialización de BD (HU01). |
-| **Developer** | Cesar Reyes | 20241308@itla.edu.do | Ingesta CSV, sanitización decimal y secuenciación lineal (HU02, HU03). |
+| **Developer** | Cesar Reyes | 20241308@itla.edu.do | Ingesta CSV y sanitización decimal (HU02). |
+| **Developer** | Jasuel De Los Santos | 20231983@itla.edu.do | Lógica del algoritmo de secuenciación lineal y cercanía (HU03). |
 | **Developer** | Luis Manuel Ortega Mejia | 20221134@itlaedudo.onmicrosoft.com | Frontend móvil responsive para hojas de ruta del conductor (HU04). |
 | **Developer** | Angel Gabriel Morillo Rosario | 20230554@itla.edu.do | Integración externa por enlaces profundos a Google Maps (HU05). |
 | **Developer** | Jostin Wilmer Perez | 20221096@itlaedudo.onmicrosoft.com | Captura en campo y validación de odómetro inicial/final (HU06). |
