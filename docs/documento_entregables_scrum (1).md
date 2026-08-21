@@ -19,9 +19,10 @@
     *   **yassil del orbe (20242536@itla.edu.do):** Pruebas de Carga e Integración de Datos, Simulación de Campo de los 5 Conductores Piloto.
     *   **Jasuel De Los Santos (20231983@itla.edu.do):** Motor de Optimización y Lógica del Algoritmo de Secuenciación Lineal (HU03).
 
-### 2. Herramientas de Gestión y Repositorio de Código
+### 2. Herramientas de Gestión, Repositorio de Código y Video de Exposición
 *   **Tablero de Gestión (Jira Software):** [Tablero Jira ORION - ITLA](https://itla-adm.atlassian.net/jira/software/projects/SCRUM/boards/1)
 *   **Repositorio Oficial de Código (GitHub):** [GitHub - ALR1730/UPS-orion](https://github.com/ALR1730/UPS-orion)
+*   **Video de Exposición y Demostración del Proyecto:** [Exposición del Software ORION MVP en YouTube (https://youtu.be/527MzZ8nduo)](https://youtu.be/527MzZ8nduo)
 *   **Evidencia del Tablero Activo en Jira (Flujo Scrum: Por hacer ➔ En curso ➔ En revisión ➔ Finalizado):**
 
 ![Tablero Activo en Jira Software - Flujo de Trabajo Scrum](docs/Screenshot%202026-08-19%20124257.png)
@@ -232,6 +233,7 @@
 ## 🏁 SECCIÓN 4: CIERRE, REVISIÓN Y APRENDIZAJE
 
 ### 1. Sprint Review (Presentación de Software Funcional)
+*   **Video de Exposición y Demostración Oficial:** [Ver Grabación en YouTube (https://youtu.be/527MzZ8nduo)](https://youtu.be/527MzZ8nduo)
 *   **Enfoque de la Demostración:** Presentación en vivo ante los evaluadores del flujo completo del sistema ORION corriendo sobre código real en lugar de diapositivas estáticas, demostrando la recuperación total tras el retraso inicial.
 *   **Flujo de la Demo Realizada:**
     1.  El Product Owner (Angel Rosario) abre el panel administrativo y carga el archivo `.csv` oficial de 15 paradas urbanas.
@@ -289,6 +291,34 @@
 
 #### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
 > *"En un próximo Sprint aplicaría como regla innegociable: (1) Dailies síncronas obligatorias a primera hora con un límite estricto de tiempo para detectar bloqueos en menos de 24 horas; (2) firmas de contratos de interfaces de datos (JSON/CSV) antes de tirar la primera línea de código; y (3) fomentar una cultura de comunicación abierta y temprana donde cualquier duda sobre el alcance se plantee de inmediato al Product Owner sin esperar a que se acumulen retrasos."*
+
+---
+
+### 👤 Evaluación Individual - Scrum Master (Juan Ectiversom Celedonio Solano)
+
+* **Nombre del Integrante:** Juan Ectiversom Celedonio Solano  
+* **Matrícula:** 2024-1562  
+* **Rol en el Sprint:** Scrum Master (SM)  
+* **Fecha de Evaluación:** 19 de Agosto de 2026  
+
+#### 1. ¿Cómo fue su experiencia trabajando en equipo?
+> *"Mi experiencia como Scrum Master fue sumamente intensa y formativa. El principal desafío fue guiar al equipo a superar la desalineación de los primeros 4 días del Sprint, donde la falta de comunicación generó bloqueos silenciosos. Convocar la Daily extraordinaria de emergencia y reestructurar los canales de comunicación permitió al equipo recuperar la cohesión y trabajar enfocado en los 14 Story Points comprometidos hasta lograr una entrega exitosa."*
+
+#### 2. ¿Cómo fue trabajar utilizando la metodología Scrum?
+> *"Scrum demostró ser fundamental para hacer visible la realidad del proyecto. El tablero de Jira y las ceremonias nos permitieron identificar los cuellos de botella con rapidez, redefinir prioridades junto al Product Owner y asegurar que cada miembro tuviera claridad absoluta sobre sus criterios de aceptación y la Definition of Done."*
+
+#### 3. ¿Qué aprendió a nivel técnico o metodológico durante este Sprint de 1 semana?
+> * **A nivel metodológico:** *"Aprendí que el rol del Scrum Master no es solo coordinar reuniones, sino proteger proactivamente el tiempo del equipo, facilitar la resolución ágil de impedimentos técnicos y mantener alta la moral y la disciplina en momentos de alta presión."*
+> * **A nivel técnico:** *"Comprendí a fondo la arquitectura Clean MVC del sistema ORION y la importancia de los contratos de datos (formatos de coordenadas e ingesta CSV) para que las dependencias entre células no detengan el avance del desarrollo."*
+
+#### 4. ¿Qué dificultades o bloqueos encontró en el desarrollo de sus tareas?
+> *"La principal dificultad fue romper el aislamiento inicial de los desarrolladores y gestionar el impedimento crítico de los 4 días de desfase. A nivel técnico, coordinar la rápida resolución del formato de comas decimales en el archivo CSV entre backend y QA requirió mediación técnica inmediata para evitar que afectara las pruebas finales."*
+
+#### 5. ¿Qué considera que pudo haberse realizado mejor en la organización del equipo?
+> *"Debimos establecer desde el primer día un canal único y centralizado de comunicación con reglas claras de escalamiento de bloqueos, así como un Sprint Planning más detallado donde se firmaran las interfaces de datos antes de iniciar la programación."*
+
+#### 6. ¿Qué haría diferente o qué buenas prácticas aplicaría en un próximo Sprint?
+> *"En un próximo Sprint aplicaría: (1) Dailies síncronas estrictas de máximo 15 minutos a primera hora del día; (2) un protocolo de escalamiento donde ningún impedimento técnico supere las 2 horas sin ser atendido; y (3) seguimiento continuo en Jira para asegurar que todas las subtareas se actualicen en tiempo real."*
 
 ---
 

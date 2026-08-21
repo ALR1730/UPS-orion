@@ -1,0 +1,23 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio cache & temporary files
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+## Visual Studio Code
+.vscode/
+
+## Database locks
+*.db-shm
+*.db-wal
+
+## OS generated files
+.DS_Store
+Thumbs.db
